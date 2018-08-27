@@ -27,12 +27,14 @@ public class EchoServer {
         EventLoopGroup elg = new NioEventLoopGroup();
         try {
             ServerBootstrap sb = new ServerBootstrap();
-            sb.group(elg).channel(NioServerSocketChannel.class).localAddress(port).childHandler(new ChannelInitializer<SocketChannel>() {
-                @Override
-                public void initChannel(SocketChannel sc) throws Exception {
-                    sc.pipeline().addLast(handler);
+            sb.group(elg).channel(NioServerSocketChannel.class).localAddress(port).childHandler(
+                new ChannelInitializer<SocketChannel>() {
+                    @Override
+                    public void initChannel(SocketChannel sc) throws Exception {
+                        sc.pipeline().addLast(handler);
+                    }
                 }
-            });
+            );
             ChannelFuture cf = sb.bind().sync();
             cf.channel().closeFuture().sync();
         } finally {
