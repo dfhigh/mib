@@ -11,12 +11,14 @@ import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.pool.AbstractChannelPoolHandler;
 import io.netty.channel.pool.ChannelPool;
 import io.netty.channel.pool.FixedChannelPool;
+import io.netty.channel.socket.nio.NioSocketChannel;
 import lombok.extern.slf4j.Slf4j;
 import org.mib.rpc.codec.SimpleBytesCodec;
 import org.mib.rpc.codec.SimpleJsonCodec;
 import org.mib.rpc.model.Request;
 import org.mib.rpc.model.Response;
 
+import java.io.Closeable;
 import java.util.concurrent.atomic.AtomicReference;
 
 import static org.mib.common.validator.Validator.validateIntPositive;
@@ -24,7 +26,7 @@ import static org.mib.common.validator.Validator.validateObjectNotNull;
 import static org.mib.common.validator.Validator.validateStringNotBlank;
 
 @Slf4j
-public class AddClient {
+public class AddClient implements Closeable {
 
     private final EventLoopGroup elg;
     private final ChannelPool pool;
@@ -34,7 +36,7 @@ public class AddClient {
         validateIntPositive(port, "port");
         validateIntPositive(maxConn, "max connection");
         this.elg = new NioEventLoopGroup();
-        Bootstrap b = new Bootstrap();
+        Bootstrap b = new Bootstrap().group(elg).channel(NioSocketChannel.class).remoteAddress(host, port);
         ChannelHandler handler = new SimpleJsonCodec<>(Response.class);
         this.pool = new FixedChannelPool(b, new AbstractChannelPoolHandler() {
             @Override
@@ -82,15 +84,21 @@ public class AddClient {
 
     @Override
     public void finalize() throws Exception {
+        close();
+    }
+
+    @Override
+    public void close() {
         pool.close();
-        elg.shutdownGracefully().sync();
+        elg.shutdownGracefully().syncUninterruptibly();
     }
 
     public static void main(String[] args) throws Exception {
-        AddClient client = new AddClient("localhost", 8080, 4);
-        System.out.println(client.add(new Request(1, 2)));
-        System.out.println(client.add(new Request(3, 4)));
-        System.out.println(client.add(new Request(7, 8)));
-        System.out.println(client.add(new Request(100, 40)));
+        try (AddClient client = new AddClient("localhost", 8080, 4)) {
+            System.out.println(client.add(new Request(1, 2)));
+            System.out.println(client.add(new Request(3, 4)));
+            System.out.println(client.add(new Request(7, 8)));
+            System.out.println(client.add(new Request(100, 40)));
+        }
     }
 }
