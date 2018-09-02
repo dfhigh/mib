@@ -13,6 +13,9 @@
         <module>netty-rpc-client</module>
         <module>netty-rpc-interface</module>
         <module>common</module>
+        <module>rest-interface</module>
+        <module>rest-client</module>
+        <module>rest-pipe</module>
     </modules>
     <name>mib</name>
 
