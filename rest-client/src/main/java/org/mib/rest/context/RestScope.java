@@ -2,26 +2,23 @@ package org.mib.rest.context;
 
 import org.slf4j.MDC;
 
-import static org.mib.rest.utils.Validator.validateObjectNotNull;
-import static org.mib.rest.utils.Validator.validateStringNotBlank;
+import static org.mib.common.validator.Validator.validateObjectNotNull;
+import static org.mib.common.validator.Validator.validateStringNotBlank;
 
-/**
- * Created by hasee on 2018/2/26.
- */
-public class ProphetScope {
+public class RestScope {
 
-    private static final ThreadLocal<ProphetContext> CONTEXT_HOLDER = ThreadLocal.withInitial(ProphetContext::new);
+    private static final ThreadLocal<RestContext> CONTEXT_HOLDER = ThreadLocal.withInitial(RestContext::new);
 
-    public static ProphetContext getProphetContext() {
+    public static RestContext getProphetContext() {
         return CONTEXT_HOLDER.get();
     }
 
     public static void clear() {
         CONTEXT_HOLDER.remove();
-        MDC.remove(ProphetContext.REQUEST_ID_HEADER);
+        MDC.remove(RestContext.REQUEST_ID_HEADER);
     }
 
-    public static void setProphetContext(ProphetContext pc) {
+    public static void setProphetContext(RestContext pc) {
         validateObjectNotNull(pc, "prophet context");
         CONTEXT_HOLDER.set(pc);
     }
@@ -32,7 +29,7 @@ public class ProphetScope {
 
     public static void setUserToken(String token) {
         validateStringNotBlank(token, "user token");
-        ProphetContext pc = getProphetContext();
+        RestContext pc = getProphetContext();
         pc.setToken(token);
     }
 
@@ -50,6 +47,6 @@ public class ProphetScope {
     public static void setRequestId(String requestId) {
         validateStringNotBlank(requestId, "requestId");
         getProphetContext().setRequestId(requestId);
-        MDC.put(ProphetContext.REQUEST_ID_HEADER, requestId);
+        MDC.put(RestContext.REQUEST_ID_HEADER, requestId);
     }
 }

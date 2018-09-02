@@ -13,8 +13,8 @@ import org.mib.rest.exception.ForbiddenException;
 import org.mib.rest.exception.ResourceNotFoundException;
 import org.mib.rest.exception.UnauthorizedException;
 
-import static org.mib.rest.utils.Serdes.deserializeFromJson;
 import static java.nio.charset.StandardCharsets.UTF_8;
+import static org.mib.common.ser.Serdes.deserializeFromJson;
 
 /**
  * Created by dufei on 18/5/9.

@@ -15,9 +15,9 @@ import org.apache.http.protocol.HttpContext;
 
 import java.util.concurrent.atomic.AtomicLong;
 
+import static org.mib.common.validator.Validator.validateIntPositive;
+import static org.mib.common.validator.Validator.validateObjectNotNull;
 import static org.mib.rest.utils.ResponseInterceptor.REQUEST_TIME_KEY;
-import static org.mib.rest.utils.Validator.validateIntPositive;
-import static org.mib.rest.utils.Validator.validateObjectNotNull;
 
 public class AsyncRestExecutor<R extends HttpUriRequest, T> implements PipeOutputConsumer<R, Void> {
 

@@ -9,8 +9,8 @@ import org.apache.http.util.EntityUtils;
 
 import java.io.IOException;
 
-import static org.mib.rest.utils.Serdes.deserializeFromJson;
-import static org.mib.rest.utils.Validator.validateObjectNotNull;
+import static org.mib.common.ser.Serdes.deserializeFromJson;
+import static org.mib.common.validator.Validator.validateObjectNotNull;
 
 @Slf4j
 public abstract class JsonHttpResponseHandler<T> extends HttpResponseHandler<T> {

@@ -8,8 +8,8 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
-import static org.mib.rest.utils.Validator.validateObjectNotNull;
-import static org.mib.rest.utils.Validator.validateStringNotBlank;
+import static org.mib.common.validator.Validator.validateObjectNotNull;
+import static org.mib.common.validator.Validator.validateStringNotBlank;
 
 /**
  * Created by dufei on 18/5/11.

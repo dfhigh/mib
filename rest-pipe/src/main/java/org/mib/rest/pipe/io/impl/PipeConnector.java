@@ -5,7 +5,7 @@ import org.mib.rest.pipe.io.PipeOutputConsumer;
 
 import java.util.concurrent.atomic.AtomicLong;
 
-import static org.mib.rest.utils.Validator.validateObjectNotNull;
+import static org.mib.common.validator.Validator.validateObjectNotNull;
 
 public class PipeConnector<I, O> implements PipeOutputConsumer<I, O> {
 

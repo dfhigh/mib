@@ -6,8 +6,8 @@ import org.mib.rest.pipe.io.PipeOutputConsumer;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import static org.mib.rest.utils.Validator.validateIntPositive;
-import static org.mib.rest.utils.Validator.validateObjectNotNull;
+import static org.mib.common.validator.Validator.validateIntPositive;
+import static org.mib.common.validator.Validator.validateObjectNotNull;
 
 public class PipeDriver<I, O> {
 

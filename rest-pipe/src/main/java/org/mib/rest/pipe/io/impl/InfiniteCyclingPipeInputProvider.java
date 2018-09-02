@@ -4,7 +4,7 @@ import org.mib.rest.pipe.io.PipeInputProvider;
 
 import java.io.IOException;
 
-import static org.mib.rest.utils.Validator.validateObjectNotNull;
+import static org.mib.common.validator.Validator.validateObjectNotNull;
 
 public class InfiniteCyclingPipeInputProvider<T> implements PipeInputProvider<T> {
 

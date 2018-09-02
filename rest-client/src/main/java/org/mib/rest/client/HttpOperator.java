@@ -25,8 +25,8 @@ import org.apache.http.util.EntityUtils;
 import java.io.InputStream;
 import java.util.Collection;
 
-import static org.mib.rest.utils.Serdes.deserializeFromJson;
-import static org.mib.rest.utils.Serdes.serializeAsJsonString;
+import static org.mib.common.ser.Serdes.deserializeFromJson;
+import static org.mib.common.ser.Serdes.serializeAsJsonString;
 
 /**
  * Created by dufei on 17/12/1.

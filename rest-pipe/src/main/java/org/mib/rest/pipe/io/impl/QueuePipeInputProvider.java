@@ -8,8 +8,8 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicLong;
 
-import static org.mib.rest.utils.Validator.validateIntPositive;
-import static org.mib.rest.utils.Validator.validateObjectNotNull;
+import static org.mib.common.validator.Validator.validateIntPositive;
+import static org.mib.common.validator.Validator.validateObjectNotNull;
 
 public class QueuePipeInputProvider<T> implements PipeInputProvider<T> {
 

@@ -3,8 +3,8 @@ package org.mib.rest.client;
 import org.mib.rest.client.callback.HttpResponseHandler;
 import org.mib.rest.client.callback.RequestAwareAsyncResponseConsumer;
 import org.mib.rest.context.IterableHttpContext;
-import org.mib.rest.context.ProphetContext;
-import org.mib.rest.context.ProphetScope;
+import org.mib.rest.context.RestContext;
+import org.mib.rest.context.RestScope;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpResponse;
@@ -33,15 +33,15 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Map;
 
-import static org.mib.rest.context.ProphetContext.REQUEST_ID_HEADER;
-import static org.mib.rest.context.ProphetContext.TOKEN_KEY;
-import static org.mib.rest.context.ProphetContext.PERMANENT_KEY;
+import static org.mib.common.ser.Serdes.serializeAsJsonString;
+import static org.mib.common.validator.Validator.validateIntPositive;
+import static org.mib.common.validator.Validator.validateObjectNotNull;
+import static org.mib.rest.context.RestContext.REQUEST_ID_HEADER;
+import static org.mib.rest.context.RestContext.TOKEN_KEY;
+import static org.mib.rest.context.RestContext.PERMANENT_KEY;
 import static org.mib.rest.utils.ResponseInterceptor.REQUEST_KEY;
 import static org.mib.rest.utils.ResponseInterceptor.REQUEST_TIME_KEY;
 import static org.mib.rest.utils.ResponseInterceptor.intercept;
-import static org.mib.rest.utils.Serdes.serializeAsJsonString;
-import static org.mib.rest.utils.Validator.validateIntPositive;
-import static org.mib.rest.utils.Validator.validateObjectNotNull;
 
 /**
  * Created by dufei on 18/5/8.
@@ -155,7 +155,7 @@ public class AsyncHttpOperator extends HttpOperator {
     public void executeHttp(HttpUriRequest request, HttpAsyncResponseConsumer<HttpResponse> consumer, IterableHttpContext context, FutureCallback<HttpResponse> callback) {
         log.debug("executing {}...", request);
         validateObjectNotNull(consumer, "async response consumer");
-        ProphetContext pc = ProphetScope.getProphetContext();
+        RestContext pc = RestScope.getProphetContext();
         if (StringUtils.isNotBlank(pc.getToken()))
             request.addHeader(TOKEN_KEY, pc.getToken());
         if (StringUtils.isNotBlank(pc.getPermanentKey()))
@@ -178,7 +178,7 @@ public class AsyncHttpOperator extends HttpOperator {
     @Override
     public HttpResponse executeHttp(HttpUriRequest request) throws Exception {
         log.debug("executing {}...", request);
-        ProphetContext pc = ProphetScope.getProphetContext();
+        RestContext pc = RestScope.getProphetContext();
         if (StringUtils.isNotBlank(pc.getToken()))
             request.addHeader(TOKEN_KEY, pc.getToken());
         if (StringUtils.isNotBlank(pc.getPermanentKey()))

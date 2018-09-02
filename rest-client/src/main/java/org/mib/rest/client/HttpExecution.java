@@ -27,12 +27,12 @@ import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.Collection;
 
-import static org.mib.rest.utils.Serdes.deserializeFromJson;
-import static org.mib.rest.utils.Serdes.serializeAsJsonString;
-import static org.mib.rest.utils.Validator.validateCollectionNotEmptyContainsNoNull;
-import static org.mib.rest.utils.Validator.validateIntNotNegative;
-import static org.mib.rest.utils.Validator.validateObjectNotNull;
-import static org.mib.rest.utils.Validator.validateStringNotBlank;
+import static org.mib.common.ser.Serdes.deserializeFromJson;
+import static org.mib.common.ser.Serdes.serializeAsJsonString;
+import static org.mib.common.validator.Validator.validateCollectionNotEmptyContainsNoNull;
+import static org.mib.common.validator.Validator.validateIntNotNegative;
+import static org.mib.common.validator.Validator.validateObjectNotNull;
+import static org.mib.common.validator.Validator.validateStringNotBlank;
 
 @NotThreadSafe
 public class HttpExecution {

@@ -5,8 +5,8 @@ import org.apache.http.HttpResponse;
 
 import java.util.function.Consumer;
 
+import static org.mib.common.validator.Validator.validateObjectNotNull;
 import static org.mib.rest.utils.ResponseInterceptor.REQUEST_LATENCY_KEY;
-import static org.mib.rest.utils.Validator.validateObjectNotNull;
 
 public class LatencyAwareHttpResponseHandler<T> extends HttpResponseHandler<T> {
 

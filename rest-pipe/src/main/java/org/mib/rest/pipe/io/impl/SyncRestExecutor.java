@@ -11,9 +11,9 @@ import org.apache.http.util.EntityUtils;
 
 import java.util.concurrent.atomic.AtomicLong;
 
+import static org.mib.common.validator.Validator.validateIntPositive;
+import static org.mib.common.validator.Validator.validateObjectNotNull;
 import static org.mib.rest.utils.ResponseInterceptor.REQUEST_LATENCY_KEY;
-import static org.mib.rest.utils.Validator.validateIntPositive;
-import static org.mib.rest.utils.Validator.validateObjectNotNull;
 
 @Slf4j
 public class SyncRestExecutor<R extends HttpUriRequest, T> implements PipeOutputConsumer<R, Void> {

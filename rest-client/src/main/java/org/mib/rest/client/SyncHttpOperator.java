@@ -1,7 +1,7 @@
 package org.mib.rest.client;
 
-import org.mib.rest.context.ProphetContext;
-import org.mib.rest.context.ProphetScope;
+import org.mib.rest.context.RestContext;
+import org.mib.rest.context.RestScope;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpResponse;
@@ -12,11 +12,11 @@ import org.apache.http.impl.client.HttpClients;
 import javax.annotation.concurrent.ThreadSafe;
 import java.io.IOException;
 
-import static org.mib.rest.context.ProphetContext.REQUEST_ID_HEADER;
-import static org.mib.rest.context.ProphetContext.TOKEN_KEY;
-import static org.mib.rest.context.ProphetContext.PERMANENT_KEY;
+import static org.mib.common.validator.Validator.validateIntPositive;
+import static org.mib.rest.context.RestContext.REQUEST_ID_HEADER;
+import static org.mib.rest.context.RestContext.TOKEN_KEY;
+import static org.mib.rest.context.RestContext.PERMANENT_KEY;
 import static org.mib.rest.utils.ResponseInterceptor.intercept;
-import static org.mib.rest.utils.Validator.validateIntPositive;
 
 /**
  * Created by dufei on 18/5/8.
@@ -36,7 +36,7 @@ public class SyncHttpOperator extends HttpOperator {
     @Override
     public HttpResponse executeHttp(HttpUriRequest request) throws Exception {
         log.debug("executing {}...", request);
-        ProphetContext pc = ProphetScope.getProphetContext();
+        RestContext pc = RestScope.getProphetContext();
         if (StringUtils.isNotBlank(pc.getToken()))
             request.addHeader(TOKEN_KEY, pc.getToken());
         if (StringUtils.isNotBlank(pc.getPermanentKey()))

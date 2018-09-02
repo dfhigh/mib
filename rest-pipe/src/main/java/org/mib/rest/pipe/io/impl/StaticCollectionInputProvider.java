@@ -7,7 +7,7 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.concurrent.BlockingQueue;
 
-import static org.mib.rest.utils.Validator.validateCollectionNotEmptyContainsNoNull;
+import static org.mib.common.validator.Validator.validateCollectionNotEmptyContainsNoNull;
 
 public class StaticCollectionInputProvider<T> implements PipeInputProvider<T> {
 

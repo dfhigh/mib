@@ -16,8 +16,8 @@ import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.nio.channels.FileChannel;
 
-import static org.mib.rest.utils.Validator.validateObjectNotNull;
-import static org.mib.rest.utils.Validator.validateStringNotBlank;
+import static org.mib.common.validator.Validator.validateObjectNotNull;
+import static org.mib.common.validator.Validator.validateStringNotBlank;
 
 public class FileDumpAsyncResponseConsumer<T> extends AbstractAsyncResponseConsumer<T> {
 

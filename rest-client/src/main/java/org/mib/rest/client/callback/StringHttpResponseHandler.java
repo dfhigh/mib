@@ -8,7 +8,7 @@ import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 
-import static org.mib.rest.utils.Validator.validateObjectNotNull;
+import static org.mib.common.validator.Validator.validateObjectNotNull;
 
 @Slf4j
 public abstract class StringHttpResponseHandler extends HttpResponseHandler<String> {

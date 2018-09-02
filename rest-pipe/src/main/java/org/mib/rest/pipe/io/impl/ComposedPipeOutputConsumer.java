@@ -6,7 +6,7 @@ import com.google.common.collect.ImmutableList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
 
-import static org.mib.rest.utils.Validator.validateCollectionNotEmptyContainsNoNull;
+import static org.mib.common.validator.Validator.validateCollectionNotEmptyContainsNoNull;
 
 public class ComposedPipeOutputConsumer<I, O> implements PipeOutputConsumer<I, O> {
 
