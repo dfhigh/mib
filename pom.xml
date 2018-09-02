@@ -16,6 +16,7 @@
         <module>rest-interface</module>
         <module>rest-client</module>
         <module>rest-pipe</module>
+        <module>db-profiler</module>
     </modules>
     <name>mib</name>
 
