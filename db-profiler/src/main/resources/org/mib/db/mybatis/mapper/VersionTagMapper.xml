@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.mib.db.mybatis.mapper.VersionTagMapper">
+
+    <select id="countOfTaggedVersions" resultType="java.lang.Long">
+        select count(version_id) from version_tag where tag_id = #{tagId}
+    </select>
+
+    <select id="listVersionsByTag" resultType="java.lang.Integer">
+        select version_id from version_tag where tag_id = #{tagId} limit #{limit} offset #{offset}
+    </select>
+
+    <select id="countOfVersionTags" resultType="java.lang.Long">
+        select count(tag_id) from version_tag where version_id = #{version_id}
+    </select>
+
+    <select id="listTagsByVersion" resultType="java.lang.Integer">
+        select tag_id from version_tag where version_id = #{versionId} limit #{limit} offset #{offset}
+    </select>
+
+    <delete id="deleteVersionTag">
+        delete from version_tag where version_id = #{versionId} and tag_id = #{tagId}
+    </delete>
+
+    <delete id="deleteTag">
+        delete from version_tag where tag_id = #{tagId}
+    </delete>
+
+</mapper>

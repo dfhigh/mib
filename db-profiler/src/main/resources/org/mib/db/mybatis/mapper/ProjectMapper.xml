@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.mib.db.mybatis.mapper.ProjectMapper">
+
+    <resultMap id="projectResult" type="org.mib.db.model.Project">
+        <id property="id" column="id" />
+        <result property="name" column="name" />
+        <result property="description" column="description" />
+        <result property="createdAt" column="created_at" />
+    </resultMap>
+
+    <select id="getProject" resultMap="projectResult">
+        select * from project where id = #{id}
+    </select>
+
+    <select id="countOfProjects" resultType="java.lang.Long">
+        select count(id) from project
+        <where>
+            <if test="params.params != null">
+                <foreach collection="params.params" open=" and " separator=" and " item="item" index="index">
+                    ${index} = #{item}
+                </foreach>
+            </if>
+            <if test="params.name != null">and name like concat('%', #{params.name}, '%')</if>
+        </where>
+    </select>
+
+    <select id="listProjects" resultMap="projectResult">
+        select * from project
+        <where>
+            <if test="params.params != null">
+                <foreach collection="params.params" open=" and " separator=" and " item="item" index="index">
+                    ${index} = #{item}
+                </foreach>
+            </if>
+            <if test="params.name != null">and name like concat('%', #{params.name}, '%')</if>
+        </where>
+        <if test="params.orderBy != null and params.ordering != null">
+            order by ${params.orderBy} ${params.ordering}
+        </if>
+        limit #{params.limit} offset #{params.offset}
+    </select>
+
+    <update id="updateProject">
+        update project
+        <set>
+            <if test="project.name != null">name=#{project.name},</if>
+            <if test="project.description != null">description=#{project.description},</if>
+        </set>
+        where id=#{project.id}
+    </update>
+
+    <delete id="deleteProjects">
+        delete from project where id in
+        <foreach collection="ids" open="(" close=")" separator="," item="item" index="index">
+            #{item}
+        </foreach>
+    </delete>
+
+</mapper>

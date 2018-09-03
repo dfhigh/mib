@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.mib.db.mybatis.mapper.FolderMapper">
+
+    <resultMap id="folderResult" type="org.mib.db.model.Folder">
+        <id property="id" column="id" />
+        <result property="projectId" column="project_id" />
+        <result property="name" column="name" />
+        <result property="description" column="description" />
+        <result property="createdAt" column="created_at" />
+    </resultMap>
+
+    <select id="getFolder" resultMap="folderResult">
+        select * from folder where id = #{id}
+    </select>
+
+    <select id="countOfFolders" resultType="java.lang.Long">
+        select count(id) from folder
+        <where>
+            <if test="params.params != null">
+                <foreach collection="params.params" open=" and " separator=" and " item="item" index="index">
+                    ${index} = #{item}
+                </foreach>
+            </if>
+            <if test="params.name != null">and name like concat('%', #{params.name}, '%')</if>
+        </where>
+    </select>
+
+    <select id="listFolders" resultMap="folderResult">
+        select * from folder
+        <where>
+            <if test="params.params != null">
+                <foreach collection="params.params" open=" and " separator=" and " item="item" index="index">
+                    ${index} = #{item}
+                </foreach>
+            </if>
+            <if test="params.name != null">and name like concat('%', #{params.name}, '%')</if>
+        </where>
+        <if test="params.orderBy != null and params.ordering != null">
+            order by ${params.orderBy} ${params.ordering}
+        </if>
+        limit #{params.limit} offset #{params.offset}
+    </select>
+
+    <update id="updateFolder">
+        update folder
+        <set>
+            <if test="folder.name != null">name=#{folder.name},</if>
+            <if test="folder.description != null">description=#{folder.description},</if>
+        </set>
+        where id=#{folder.id}
+    </update>
+
+    <delete id="deleteFolders">
+        delete from folder where id in
+        <foreach collection="ids" open="(" close=")" separator="," item="item" index="index">
+            #{item}
+        </foreach>
+    </delete>
+
+</mapper>
