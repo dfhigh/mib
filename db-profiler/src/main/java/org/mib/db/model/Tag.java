@@ -8,5 +8,6 @@ import java.util.Date;
 public class Tag {
     private int id;
     private String name;
+    private String description;
     private Date createdAt;
 }
