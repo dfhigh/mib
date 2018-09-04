@@ -62,7 +62,7 @@
     <update id="updateVersion">
         update version
         <set>
-            <if test="version.key != null">key=#{version.key},</if>
+            <if test="version.version != null">version=#{version.version},</if>
             <if test="version.strProp1 != null">prop1=#{version.strProp1},</if>
             <if test="version.strProp2 != null">prop2=#{version.strProp2},</if>
             <if test="version.strProp3 != null">prop3=#{version.strProp3},</if>

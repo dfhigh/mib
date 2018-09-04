@@ -13,8 +13,8 @@ import java.util.List;
 @Mapper
 public interface DocumentMapper {
 
-    @Insert("insert into document (project_id, folder_id, key, created_at, prop1, prop2, prop3, prop4, prop5, prop6, " +
-            "prop7, prop8, prop9) values (#{document.projectId}, #{document.folderId}, #{document.key}, " +
+    @Insert("insert into document (project_id, folder_id, name, created_at, prop1, prop2, prop3, prop4, prop5, prop6, " +
+            "prop7, prop8, prop9) values (#{document.projectId}, #{document.folderId}, #{document.name}, " +
             "#{document.createdAt}, #{document.strProp1}, #{document.strProp2}, #{document.strProp3}, #{document.strProp4}, " +
             "#{document.intProp5}, #{document.intProp6},  #{document.intProp7}, #{document.intProp8}, #{document.intProp9})")
     @Options(useGeneratedKeys = true, keyProperty = "document.id")

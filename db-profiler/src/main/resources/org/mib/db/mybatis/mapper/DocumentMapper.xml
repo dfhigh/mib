@@ -8,7 +8,7 @@
         <id property="id" column="id" />
         <result property="projectId" column="project_id" />
         <result property="folderId" column="folder_id" />
-        <result property="key" column="key" />
+        <result property="name" column="name" />
         <result property="createdAt" column="created_at" />
         <result property="strProp1" column="prop1" />
         <result property="strProp2" column="prop2" />
@@ -56,7 +56,7 @@
     <update id="updateDocument">
         update document
         <set>
-            <if test="document.key != null">key=#{document.key},</if>
+            <if test="document.name != null">name=#{document.name},</if>
             <if test="document.strProp1 != null">prop1=#{document.strProp1},</if>
             <if test="document.strProp2 != null">prop2=#{document.strProp2},</if>
             <if test="document.strProp3 != null">prop3=#{document.strProp3},</if>
