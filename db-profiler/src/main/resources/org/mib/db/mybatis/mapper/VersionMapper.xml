@@ -4,7 +4,7 @@
 
 <mapper namespace="org.mib.db.mybatis.mapper.VersionMapper">
 
-    <resultMap id="docResult" type="org.mib.db.model.Version">
+    <resultMap id="versionResult" type="org.mib.db.model.Version">
         <id property="id" column="id" />
         <result property="projectId" column="project_id" />
         <result property="folderId" column="folder_id" />

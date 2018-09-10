@@ -3,6 +3,8 @@ package org.mib.db.mybatis.mapper;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
+import org.mib.db.model.Tag;
+import org.mib.db.model.Version;
 
 import java.util.List;
 
@@ -14,11 +16,11 @@ public interface VersionTagMapper {
 
     long countOfTaggedVersions(@Param("tagId") int tagId);
 
-    List<Integer> listVersionsByTag(@Param("tagId") int tagId, @Param("limit") int limit, @Param("offset") long offset);
+    List<Version> listVersionsByTag(@Param("tagId") int tagId, @Param("limit") int limit, @Param("offset") long offset);
 
     long countOfVersionTags(@Param("versionId") int versionId);
 
-    List<Integer> listTagsByVersion(@Param("versionId") int versionId, @Param("limit") int limit, @Param("offset") long offset);
+    List<Tag> listTagsByVersion(@Param("versionId") int versionId, @Param("limit") int limit, @Param("offset") long offset);
 
     void deleteVersionTag(@Param("versionId") int versionId, @Param("tagId") int tagId);
 
