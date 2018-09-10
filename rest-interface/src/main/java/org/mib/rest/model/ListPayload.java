@@ -16,6 +16,6 @@ import java.util.List;
 @AllArgsConstructor
 public class ListPayload<T> {
     private List<T> list;
-    private long page;
+    private long offset;
     private long total;
 }
