@@ -11,7 +11,7 @@ import java.util.List;
 @Mapper
 public interface VersionTagMapper {
 
-    @Insert("insert into tag_version (version_id, tag_id) values (#{versionId}, #{tagId})")
+    @Insert("insert into version_tag (version_id, tag_id) values (#{versionId}, #{tagId})")
     void createVersionTag(@Param("versionId") int versionId, @Param("tagId") int tagId);
 
     long countOfTaggedVersions(@Param("tagId") int tagId);

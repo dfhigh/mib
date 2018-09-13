@@ -6,7 +6,6 @@ import org.mib.db.model.Folder;
 import org.mib.db.model.Project;
 import org.mib.db.model.Tag;
 import org.mib.db.model.Version;
-import org.mib.db.model.VersionTag;
 
 import java.util.Date;
 import java.util.concurrent.ThreadLocalRandom;
@@ -38,6 +37,7 @@ public class ModelFactory {
         Document doc = new Document();
         doc.setProjectId(projectId);
         doc.setFolderId(folderId);
+        doc.setName(randomAlphanumeric(1, 64));
         doc.setCreatedAt(new Date());
         doc.setStrProp1(randomAlphanumeric(1, 256));
         doc.setStrProp2(randomAlphanumeric(1, 256));
@@ -57,6 +57,7 @@ public class ModelFactory {
         version.setProjectId(projectId);
         version.setFolderId(folderId);
         version.setDocumentId(docId);
+        version.setVersion(randomAlphanumeric(1, 64));
         version.setCreatedAt(new Date());
         version.setStrProp1(randomAlphanumeric(1, 256));
         version.setStrProp2(randomAlphanumeric(1, 256));
@@ -81,10 +82,6 @@ public class ModelFactory {
         tag.setDescription(randomAlphanumeric(1, 256));
         tag.setCreatedAt(new Date());
         return tag;
-    }
-
-    public static VersionTag versionTag(int versionId, int tagId) {
-        return new VersionTag(versionId, tagId);
     }
 
 }

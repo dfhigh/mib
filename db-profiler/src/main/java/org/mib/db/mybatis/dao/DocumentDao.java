@@ -30,6 +30,7 @@ public class DocumentDao extends Dao {
         try (SqlSession session = ssf.openSession()) {
             DocumentMapper mapper = session.getMapper(DocumentMapper.class);
             mapper.createDocument(document);
+            session.commit();
             return document;
         }
     }
@@ -65,6 +66,7 @@ public class DocumentDao extends Dao {
         try (SqlSession session = ssf.openSession()) {
             DocumentMapper mapper = session.getMapper(DocumentMapper.class);
             mapper.updateDocument(document);
+            session.commit();
             return document;
         }
     }
@@ -74,6 +76,7 @@ public class DocumentDao extends Dao {
         try (SqlSession session = ssf.openSession()) {
             DocumentMapper mapper = session.getMapper(DocumentMapper.class);
             mapper.deleteDocuments(ids);
+            session.commit();
         }
     }
 }

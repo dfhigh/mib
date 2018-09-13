@@ -29,6 +29,7 @@ public class ProjectDao extends Dao {
         try (SqlSession session = ssf.openSession()) {
             ProjectMapper mapper = session.getMapper(ProjectMapper.class);
             mapper.createProject(project);
+            session.commit();
             return project;
         }
     }
@@ -61,6 +62,7 @@ public class ProjectDao extends Dao {
         try (SqlSession session = ssf.openSession()) {
             ProjectMapper mapper = session.getMapper(ProjectMapper.class);
             mapper.updateProject(project);
+            session.commit();
             return project;
         }
     }
@@ -70,6 +72,7 @@ public class ProjectDao extends Dao {
         try (SqlSession session = ssf.openSession()) {
             ProjectMapper mapper = session.getMapper(ProjectMapper.class);
             mapper.deleteProjects(ids);
+            session.commit();
         }
     }
 }

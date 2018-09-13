@@ -27,7 +27,7 @@
         <result property="intProp14" column="prop14" />
     </resultMap>
 
-    <select id="getVersion" resultMap="docResult">
+    <select id="getVersion" resultMap="versionResult">
         select * from version where id = #{id}
     </select>
 
@@ -43,7 +43,7 @@
         </where>
     </select>
 
-    <select id="listVersions" resultMap="docResult">
+    <select id="listVersions" resultMap="versionResult">
         select * from version
         <where>
             <if test="params.params != null">

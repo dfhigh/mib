@@ -30,6 +30,7 @@ public class FolderDao extends Dao {
         try (SqlSession session = ssf.openSession()) {
             FolderMapper mapper = session.getMapper(FolderMapper.class);
             mapper.createFolder(folder);
+            session.commit();
             return folder;
         }
     }
@@ -65,6 +66,7 @@ public class FolderDao extends Dao {
         try (SqlSession session = ssf.openSession()) {
             FolderMapper mapper = session.getMapper(FolderMapper.class);
             mapper.updateFolder(folder);
+            session.commit();
             return folder;
         }
     }
@@ -74,6 +76,7 @@ public class FolderDao extends Dao {
         try (SqlSession session = ssf.openSession()) {
             FolderMapper mapper = session.getMapper(FolderMapper.class);
             mapper.deleteFolders(ids);
+            session.commit();
         }
     }
 }

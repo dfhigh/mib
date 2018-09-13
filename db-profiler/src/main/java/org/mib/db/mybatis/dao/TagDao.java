@@ -29,6 +29,7 @@ public class TagDao extends Dao {
         try (SqlSession session = ssf.openSession()) {
             TagMapper mapper = session.getMapper(TagMapper.class);
             mapper.createTag(tag);
+            session.commit();
             return tag;
         }
     }

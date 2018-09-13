@@ -30,6 +30,7 @@ public class VersionDao extends Dao {
         try (SqlSession session = ssf.openSession()) {
             VersionMapper mapper = session.getMapper(VersionMapper.class);
             mapper.createVersion(version);
+            session.commit();
             return version;
         }
     }
@@ -65,6 +66,7 @@ public class VersionDao extends Dao {
         try (SqlSession session = ssf.openSession()) {
             VersionMapper mapper = session.getMapper(VersionMapper.class);
             mapper.updateVersion(version);
+            session.commit();
             return version;
         }
     }
@@ -74,6 +76,7 @@ public class VersionDao extends Dao {
         try (SqlSession session = ssf.openSession()) {
             VersionMapper mapper = session.getMapper(VersionMapper.class);
             mapper.deleteVersions(ids);
+            session.commit();
         }
     }
 }

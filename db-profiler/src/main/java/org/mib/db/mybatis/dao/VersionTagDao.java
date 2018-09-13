@@ -26,6 +26,7 @@ public class VersionTagDao extends Dao {
         try (SqlSession session = ssf.openSession()) {
             VersionTagMapper mapper = session.getMapper(VersionTagMapper.class);
             mapper.createVersionTag(versionId, tagId);
+            session.commit();
         }
     }
 
@@ -59,6 +60,7 @@ public class VersionTagDao extends Dao {
         try (SqlSession session = ssf.openSession()) {
             VersionTagMapper mapper = session.getMapper(VersionTagMapper.class);
             mapper.deleteVersionTag(versionId, tagId);
+            session.commit();
         }
     }
 
@@ -67,6 +69,7 @@ public class VersionTagDao extends Dao {
         try (SqlSession session = ssf.openSession()) {
             VersionTagMapper mapper = session.getMapper(VersionTagMapper.class);
             mapper.deleteTag(tagId);
+            session.commit();
         }
     }
 }

@@ -6,6 +6,7 @@ import org.apache.commons.lang3.StringUtils;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Properties;
 import java.util.regex.Matcher;
@@ -16,7 +17,7 @@ public class ConfigProvider {
 
     private static final Pattern WITH_ENV_VALUE = Pattern.compile("\\$\\{(\\w+):(.*)}");
 
-    private static final Properties PREDICTOR_CONFIGS = new Properties();
+    private static final Properties CONFIGS = new Properties();
     static {
         try {
             String externalConfig = System.getProperty("config.location");
@@ -26,18 +27,28 @@ public class ConfigProvider {
                 is = new FileInputStream(externalConfig);
             } else {
                 log.info("loading config from classpath config file application.properties...");
-                is = ConfigProvider.class.getResourceAsStream("/application.properties");
+                is = ConfigProvider.class.getResourceAsStream("/config.properties");
             }
-            PREDICTOR_CONFIGS.load(is);
-            log.info("loaded config as {}", PREDICTOR_CONFIGS);
+            CONFIGS.load(is);
+            log.info("loaded config as {}", CONFIGS);
         } catch (IOException e) {
             log.error("failed to load config", e);
-            throw new IllegalStateException("unable to load config");
+            throw new IllegalStateException("unable to load config", e);
         }
     }
 
+    public static Properties getByPrefix(String prefix) {
+        Properties properties = new Properties();
+        for (Map.Entry<Object, Object> entry : CONFIGS.entrySet()) {
+            if (!(entry.getKey() instanceof String)) continue;
+            if (!((String) entry.getKey()).startsWith(prefix)) continue;
+            properties.put(entry.getKey(), entry.getValue());
+        }
+        return properties;
+    }
+
     public static String get(String key) {
-        String raw = PREDICTOR_CONFIGS.getProperty(key);
+        String raw = CONFIGS.getProperty(key);
         if (raw != null) {
             Matcher matcher = WITH_ENV_VALUE.matcher(raw);
             if (matcher.find()) {
