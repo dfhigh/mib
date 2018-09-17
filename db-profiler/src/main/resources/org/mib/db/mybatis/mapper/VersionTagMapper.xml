@@ -39,15 +39,15 @@
     </select>
 
     <select id="listVersionsByTag" resultMap="versionResult">
-        select v.* from version v, version_tag vt where vt.tag_id = #{tagId} and v.id = vt.version_id limit #{limit} offset #{offset}
+        select * from version inner join (select version_id from version_tag where tag_id=#{tagId} limit #{limit} offset #{offset}) as t on version.id=t.version_id
     </select>
 
     <select id="countOfVersionTags" resultType="java.lang.Long">
-        select count(tag_id) from version_tag where version_id = #{version_id}
+        select count(tag_id) from version_tag where version_id = #{versionId}
     </select>
 
     <select id="listTagsByVersion" resultMap="tagResult">
-        select t.* from tag t, version_tag vt where vt.version_id = #{versionId} and vt.tag_id = t.id limit #{limit} offset #{offset}
+        select * from tag inner join (select tag_id from version_tag where version_id=#{versionId} limit #{limit} offset #{offset}) as t on tag.id=t.tag_id
     </select>
 
     <delete id="deleteVersionTag">
