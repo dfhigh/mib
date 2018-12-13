@@ -14,7 +14,7 @@ import java.util.regex.Pattern;
 @Slf4j
 public class ConfigProvider {
 
-    private static final Pattern WITH_ENV_VALUE = Pattern.compile("\\$\\{(\\w+):(.*)}");
+    private static final Pattern WITH_ENV_VALUE = Pattern.compile("\\$\\{(\\w+)(:.*)?}");
 
     private static final Properties PREDICTOR_CONFIGS = new Properties();
     static {
@@ -41,9 +41,13 @@ public class ConfigProvider {
         if (raw != null) {
             Matcher matcher = WITH_ENV_VALUE.matcher(raw);
             if (matcher.find()) {
-                String env = matcher.group(1), defaultValue = matcher.group(2);
+                String env = matcher.group(1), defaultValueWithColon = matcher.group(2);
                 String envValue = System.getenv(env);
-                return Optional.ofNullable(envValue).orElse(defaultValue);
+                if (defaultValueWithColon != null) {
+                    String defaultValue = defaultValueWithColon.substring(1);
+                    return Optional.ofNullable(envValue).orElse(defaultValue);
+                }
+                return envValue;
             }
         }
         return raw;
