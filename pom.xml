@@ -21,6 +21,14 @@
     </modules>
     <name>mib</name>
 
+    <properties>
+        <guava.version>27.0-jre</guava.version>
+        <slf4j.version>1.7.25</slf4j.version>
+        <lombok.version>1.16.20</lombok.version>
+        <jackson.version>2.9.8</jackson.version>
+        <lang3.version>3.7</lang3.version>
+    </properties>
+
     <build>
         <plugins>
             <plugin>
