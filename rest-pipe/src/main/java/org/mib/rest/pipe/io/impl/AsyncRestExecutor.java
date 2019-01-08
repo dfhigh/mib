@@ -1,5 +1,6 @@
 package org.mib.rest.pipe.io.impl;
 
+import org.apache.commons.lang3.StringUtils;
 import org.mib.rest.client.AsyncHttpOperator;
 import org.mib.rest.client.callback.HttpResponseHandler;
 import org.mib.rest.context.IterableHttpContext;
@@ -25,12 +26,23 @@ public class AsyncRestExecutor<R extends HttpUriRequest, T> implements PipeOutpu
     private final HttpResponseHandler<T> handler;
     private final AsyncHttpResponseConsumerFactory<R, HttpResponse> factory;
     private final AtomicLong consumed;
+    private final String cookie;
 
     public AsyncRestExecutor(final AsyncHttpOperator http, final HttpResponseHandler<T> handler) {
         this(http, handler, t -> null);
     }
 
-    public AsyncRestExecutor(final AsyncHttpOperator http, final HttpResponseHandler<T> handler, final AsyncHttpResponseConsumerFactory<R, HttpResponse> factory) {
+    public AsyncRestExecutor(final AsyncHttpOperator http, final HttpResponseHandler<T> handler, final String cookie) {
+        this(http, handler, t -> null, cookie);
+    }
+
+    public AsyncRestExecutor(final AsyncHttpOperator http, final HttpResponseHandler<T> handler,
+                             final AsyncHttpResponseConsumerFactory<R, HttpResponse> factory) {
+        this(http, handler, factory, null);
+    }
+
+    public AsyncRestExecutor(final AsyncHttpOperator http, final HttpResponseHandler<T> handler,
+                             final AsyncHttpResponseConsumerFactory<R, HttpResponse> factory, final String cookie) {
         validateObjectNotNull(http, "http operator");
         validateObjectNotNull(handler, "response handler");
         validateObjectNotNull(factory, "consumer factory");
@@ -38,13 +50,24 @@ public class AsyncRestExecutor<R extends HttpUriRequest, T> implements PipeOutpu
         this.handler = handler;
         this.factory = factory;
         this.consumed = new AtomicLong(0);
+        this.cookie = cookie;
     }
 
     public AsyncRestExecutor(final int maxConn, final int maxConnPerRoute, final HttpResponseHandler<T> handler) {
         this(maxConn, maxConnPerRoute, handler, t -> null);
     }
 
-    public AsyncRestExecutor(final int maxConn, final int maxConnPerRoute, final HttpResponseHandler<T> handler, final AsyncHttpResponseConsumerFactory<R, HttpResponse> factory) {
+    public AsyncRestExecutor(final int maxConn, final int maxConnPerRoute, final HttpResponseHandler<T> handler, final String cookie) {
+        this(maxConn, maxConnPerRoute, handler, t -> null, cookie);
+    }
+
+    public AsyncRestExecutor(final int maxConn, final int maxConnPerRoute, final HttpResponseHandler<T> handler,
+                             final AsyncHttpResponseConsumerFactory<R, HttpResponse> factory) {
+        this(maxConn, maxConnPerRoute, handler, factory, null);
+    }
+
+    public AsyncRestExecutor(final int maxConn, final int maxConnPerRoute, final HttpResponseHandler<T> handler,
+                             final AsyncHttpResponseConsumerFactory<R, HttpResponse> factory, final String cookie) {
         validateIntPositive(maxConn, "max connection");
         validateIntPositive(maxConnPerRoute, "max connection per route");
         validateObjectNotNull(handler, "response handler");
@@ -53,10 +76,12 @@ public class AsyncRestExecutor<R extends HttpUriRequest, T> implements PipeOutpu
         this.handler = handler;
         this.factory = factory;
         this.consumed = new AtomicLong(0);
+        this.cookie = cookie;
     }
 
     @Override
     public Void consume(R payload) {
+        if (StringUtils.isNotBlank(cookie)) payload.addHeader("Cookie", cookie);
         HttpAsyncResponseConsumer<HttpResponse> consumer = factory.createConsumer(payload);
         if (consumer == null) {
             http.executeHttp(payload, handler);

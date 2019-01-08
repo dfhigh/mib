@@ -7,14 +7,12 @@ import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.databind.SerializationFeature;
-import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.mib.common.validator.Validator.validateObjectNotNull;
 
-@Slf4j
 public class Serdes {
 
     private static final ObjectMapper OM = new ObjectMapper()
