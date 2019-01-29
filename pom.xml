@@ -9,9 +9,6 @@
     <packaging>pom</packaging>
     <version>1.0-SNAPSHOT</version>
     <modules>
-        <module>netty-rpc-server</module>
-        <module>netty-rpc-client</module>
-        <module>netty-rpc-interface</module>
         <module>common</module>
         <module>rest-interface</module>
         <module>rest-client</module>
