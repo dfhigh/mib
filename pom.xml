@@ -52,6 +52,24 @@
                 </executions>
             </plugin>
         </plugins>
+        <extensions>
+            <extension>
+                <groupId>org.springframework.build</groupId>
+                <artifactId>aws-maven</artifactId>
+                <version>5.0.0.RELEASE</version>
+            </extension>
+        </extensions>
     </build>
+
+    <distributionManagement>
+        <snapshotRepository>
+            <id>bim360-docs-maven-snapshot</id>
+            <url>s3://bim360-docs-maven/snapshot</url>
+        </snapshotRepository>
+        <repository>
+            <id>bim360-docs-maven-release</id>
+            <url>s3://bim360-docs-maven/release</url>
+        </repository>
+    </distributionManagement>
 
 </project>
