@@ -3,7 +3,6 @@ package org.mib.rest.client;
 import org.mib.rest.context.RestContext;
 import org.mib.rest.context.RestScope;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.impl.client.CloseableHttpClient;
@@ -13,9 +12,6 @@ import javax.annotation.concurrent.ThreadSafe;
 import java.io.IOException;
 
 import static org.mib.common.validator.Validator.validateIntPositive;
-import static org.mib.rest.context.RestContext.REQUEST_ID_HEADER;
-import static org.mib.rest.context.RestContext.TOKEN_KEY;
-import static org.mib.rest.context.RestContext.PERMANENT_KEY;
 import static org.mib.rest.utils.ResponseInterceptor.intercept;
 
 /**
@@ -27,6 +23,10 @@ public class SyncHttpOperator extends HttpOperator {
 
     private final CloseableHttpClient http;
 
+    public SyncHttpOperator() {
+        this(DEFAULT_CONN, DEFAULT_CONN_PER_ROUTE);
+    }
+
     public SyncHttpOperator(int maxConn, int maxConnPerRoute) {
         validateIntPositive(maxConn, "maxConn");
         validateIntPositive(maxConnPerRoute, "maxConnPerRoute");
@@ -36,13 +36,12 @@ public class SyncHttpOperator extends HttpOperator {
     @Override
     public HttpResponse executeHttp(HttpUriRequest request) throws Exception {
         log.debug("executing {}...", request);
-        RestContext pc = RestScope.getProphetContext();
-        if (StringUtils.isNotBlank(pc.getToken()))
-            request.addHeader(TOKEN_KEY, pc.getToken());
-        if (StringUtils.isNotBlank(pc.getPermanentKey()))
-            request.addHeader(PERMANENT_KEY, pc.getPermanentKey());
-        if (StringUtils.isNotBlank(pc.getRequestId())) request.addHeader(REQUEST_ID_HEADER, pc.getRequestId());
+        RestContext rc = RestScope.getRestContext();
+        if (rc.getContextHeaders() != null && !rc.getContextHeaders().isEmpty()) {
+            rc.getContextHeaders().forEach(request::addHeader);
+        }
         HttpResponse response = http.execute(request);
+        log.debug("executed {} with response {}", request, response);
         return intercept(request, response);
     }
 

@@ -35,6 +35,8 @@ import static org.mib.common.ser.Serdes.serializeAsJsonString;
 @Slf4j
 public abstract class HttpOperator {
 
+    static final int DEFAULT_CONN = 8;
+    static final int DEFAULT_CONN_PER_ROUTE = 4;
     private static final TypeFactory TF = TypeFactory.defaultInstance();
 
     /*******************************************************************************************************************

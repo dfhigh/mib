@@ -1,27 +1,19 @@
 package org.mib.rest.context;
 
+import com.google.common.collect.Maps;
 import lombok.Data;
+
+import java.util.Map;
 
 @Data
 public class RestContext implements Cloneable {
 
-    public static final String PROPHET_AUTH_HEADER = "X-Prophet-Auth";
-    public static final String REQUEST_ID_HEADER = "X-Prophet-Tracing-v1";
-    public static final String COOKIE_HEADER = "Cookie";
-    public static final String TOKEN_KEY = "User-Token";
-    public static final String PERMANENT_KEY = "Access-Key";
-
-    private String token;
-    private String requestId;
-    private String permanentKey;
+    private Map<String, String> contextHeaders;
 
     @Override
-    @SuppressWarnings("MethodDoesntCallSuperMethod")
-    public RestContext clone() {
-        RestContext pc = new RestContext();
-        pc.setToken(token);
-        pc.setRequestId(requestId);
-        pc.setPermanentKey(permanentKey);
-        return pc;
+    public RestContext clone() throws CloneNotSupportedException {
+        RestContext rc = (RestContext) super.clone();
+        if (contextHeaders != null) rc.setContextHeaders(Maps.newHashMap(contextHeaders));
+        return rc;
     }
 }

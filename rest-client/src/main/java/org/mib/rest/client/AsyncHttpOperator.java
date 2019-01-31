@@ -36,9 +36,6 @@ import java.util.Map;
 import static org.mib.common.ser.Serdes.serializeAsJsonString;
 import static org.mib.common.validator.Validator.validateIntPositive;
 import static org.mib.common.validator.Validator.validateObjectNotNull;
-import static org.mib.rest.context.RestContext.REQUEST_ID_HEADER;
-import static org.mib.rest.context.RestContext.TOKEN_KEY;
-import static org.mib.rest.context.RestContext.PERMANENT_KEY;
 import static org.mib.rest.utils.ResponseInterceptor.REQUEST_KEY;
 import static org.mib.rest.utils.ResponseInterceptor.REQUEST_TIME_KEY;
 import static org.mib.rest.utils.ResponseInterceptor.intercept;
@@ -72,6 +69,10 @@ public class AsyncHttpOperator extends HttpOperator {
     };
 
     private final CloseableHttpAsyncClient http;
+
+    public AsyncHttpOperator() {
+        this(DEFAULT_CONN, DEFAULT_CONN_PER_ROUTE);
+    }
 
     public AsyncHttpOperator(final int maxConn, final int maxConnPerRoute) {
         validateIntPositive(maxConn, "maxConn");
@@ -155,12 +156,10 @@ public class AsyncHttpOperator extends HttpOperator {
     public void executeHttp(HttpUriRequest request, HttpAsyncResponseConsumer<HttpResponse> consumer, IterableHttpContext context, FutureCallback<HttpResponse> callback) {
         log.debug("executing {}...", request);
         validateObjectNotNull(consumer, "async response consumer");
-        RestContext pc = RestScope.getProphetContext();
-        if (StringUtils.isNotBlank(pc.getToken()))
-            request.addHeader(TOKEN_KEY, pc.getToken());
-        if (StringUtils.isNotBlank(pc.getPermanentKey()))
-            request.addHeader(PERMANENT_KEY, pc.getPermanentKey());
-        if (StringUtils.isNotBlank(pc.getRequestId())) request.addHeader(REQUEST_ID_HEADER, pc.getRequestId());
+        RestContext rc = RestScope.getRestContext();
+        if (rc.getContextHeaders() != null && !rc.getContextHeaders().isEmpty()) {
+            rc.getContextHeaders().forEach(request::addHeader);
+        }
         if (context != null) {
             context.setAttribute(REQUEST_KEY, request);
             context.setAttribute(REQUEST_TIME_KEY, System.currentTimeMillis());
@@ -178,12 +177,10 @@ public class AsyncHttpOperator extends HttpOperator {
     @Override
     public HttpResponse executeHttp(HttpUriRequest request) throws Exception {
         log.debug("executing {}...", request);
-        RestContext pc = RestScope.getProphetContext();
-        if (StringUtils.isNotBlank(pc.getToken()))
-            request.addHeader(TOKEN_KEY, pc.getToken());
-        if (StringUtils.isNotBlank(pc.getPermanentKey()))
-            request.addHeader(PERMANENT_KEY, pc.getPermanentKey());
-        if (StringUtils.isNotBlank(pc.getRequestId())) request.addHeader(REQUEST_ID_HEADER, pc.getRequestId());
+        RestContext rc = RestScope.getRestContext();
+        if (rc.getContextHeaders() != null && !rc.getContextHeaders().isEmpty()) {
+            rc.getContextHeaders().forEach(request::addHeader);
+        }
         HttpResponse response = http.execute(request, SYNC_CB).get();
         return intercept(request, response);
     }
