@@ -9,6 +9,7 @@ import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.config.RequestConfig;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPatch;
@@ -304,6 +305,26 @@ public abstract class HttpOperator {
         executeHttpVoid(HttpPost.METHOD_NAME, url, parameters, headers, is, key, timeoutMillis);
     }
 
+    public <T> T postFor(String url, Collection<NameValuePair> parameters, Collection<NameValuePair> headers, Collection<NameValuePair> formKeyValues, int timeoutMillis, Class<T> clazz) throws Exception {
+        return executeHttpFor(HttpPost.METHOD_NAME, url, parameters, headers, formKeyValues, timeoutMillis, TF.constructType(clazz));
+    }
+
+    public <T> T postFor(String url, Collection<NameValuePair> parameters, Collection<NameValuePair> headers, Collection<NameValuePair> formKeyValues, int timeoutMillis, TypeReference<T> tr) throws Exception {
+        return executeHttpFor(HttpPost.METHOD_NAME, url, parameters, headers, formKeyValues, timeoutMillis, TF.constructType(tr));
+    }
+
+    public byte[] postForRaw(String url, Collection<NameValuePair> parameters, Collection<NameValuePair> headers, Collection<NameValuePair> formKeyValues, int timeoutMillis) throws Exception {
+        return executeHttpForRaw(HttpPost.METHOD_NAME, url, parameters, headers, formKeyValues, timeoutMillis);
+    }
+
+    public InputStream postForStream(String url, Collection<NameValuePair> parameters, Collection<NameValuePair> headers, Collection<NameValuePair> formKeyValues, int timeoutMillis) throws Exception {
+        return executeHttpForStream(HttpPost.METHOD_NAME, url, parameters, headers, formKeyValues, timeoutMillis);
+    }
+
+    public void postVoid(String url, Collection<NameValuePair> parameters, Collection<NameValuePair> headers, Collection<NameValuePair> formKeyValues, int timeoutMillis) throws Exception {
+        executeHttpVoid(HttpPost.METHOD_NAME, url, parameters, headers, formKeyValues, timeoutMillis);
+    }
+
     /*******************************************************************************************************************
      HTTP PUT
      ******************************************************************************************************************/
@@ -486,6 +507,26 @@ public abstract class HttpOperator {
 
     public void putVoid(String url, Collection<NameValuePair> parameters, Collection<NameValuePair> headers, InputStream is, String key, int timeoutMillis) throws Exception {
         executeHttpVoid(HttpPut.METHOD_NAME, url, parameters, headers, is, key, timeoutMillis);
+    }
+
+    public <T> T putFor(String url, Collection<NameValuePair> parameters, Collection<NameValuePair> headers, Collection<NameValuePair> formKeyValues, int timeoutMillis, Class<T> clazz) throws Exception {
+        return executeHttpFor(HttpPost.METHOD_NAME, url, parameters, headers, formKeyValues, timeoutMillis, TF.constructType(clazz));
+    }
+
+    public <T> T putFor(String url, Collection<NameValuePair> parameters, Collection<NameValuePair> headers, Collection<NameValuePair> formKeyValues, int timeoutMillis, TypeReference<T> tr) throws Exception {
+        return executeHttpFor(HttpPost.METHOD_NAME, url, parameters, headers, formKeyValues, timeoutMillis, TF.constructType(tr));
+    }
+
+    public byte[] putFor(String url, Collection<NameValuePair> parameters, Collection<NameValuePair> headers, Collection<NameValuePair> formKeyValues, int timeoutMillis) throws Exception {
+        return executeHttpForRaw(HttpPost.METHOD_NAME, url, parameters, headers, formKeyValues, timeoutMillis);
+    }
+
+    public InputStream putForStream(String url, Collection<NameValuePair> parameters, Collection<NameValuePair> headers, Collection<NameValuePair> formKeyValues, int timeoutMillis) throws Exception {
+        return executeHttpForStream(HttpPost.METHOD_NAME, url, parameters, headers, formKeyValues, timeoutMillis);
+    }
+
+    public void putVoid(String url, Collection<NameValuePair> parameters, Collection<NameValuePair> headers, Collection<NameValuePair> formKeyValues, int timeoutMillis) throws Exception {
+        executeHttpVoid(HttpPost.METHOD_NAME, url, parameters, headers, formKeyValues, timeoutMillis);
     }
 
     /*******************************************************************************************************************
@@ -672,6 +713,26 @@ public abstract class HttpOperator {
         executeHttpVoid(HttpPatch.METHOD_NAME, url, parameters, headers, is, key, timeoutMillis);
     }
 
+    public <T> T patchFor(String url, Collection<NameValuePair> parameters, Collection<NameValuePair> headers, Collection<NameValuePair> formKeyValues, int timeoutMillis, Class<T> clazz) throws Exception {
+        return executeHttpFor(HttpPost.METHOD_NAME, url, parameters, headers, formKeyValues, timeoutMillis, TF.constructType(clazz));
+    }
+
+    public <T> T patchFor(String url, Collection<NameValuePair> parameters, Collection<NameValuePair> headers, Collection<NameValuePair> formKeyValues, int timeoutMillis, TypeReference<T> tr) throws Exception {
+        return executeHttpFor(HttpPost.METHOD_NAME, url, parameters, headers, formKeyValues, timeoutMillis, TF.constructType(tr));
+    }
+
+    public byte[] patchFor(String url, Collection<NameValuePair> parameters, Collection<NameValuePair> headers, Collection<NameValuePair> formKeyValues, int timeoutMillis) throws Exception {
+        return executeHttpForRaw(HttpPost.METHOD_NAME, url, parameters, headers, formKeyValues, timeoutMillis);
+    }
+
+    public InputStream patchForStream(String url, Collection<NameValuePair> parameters, Collection<NameValuePair> headers, Collection<NameValuePair> formKeyValues, int timeoutMillis) throws Exception {
+        return executeHttpForStream(HttpPost.METHOD_NAME, url, parameters, headers, formKeyValues, timeoutMillis);
+    }
+
+    public void patchVoid(String url, Collection<NameValuePair> parameters, Collection<NameValuePair> headers, Collection<NameValuePair> formKeyValues, int timeoutMillis) throws Exception {
+        executeHttpVoid(HttpPost.METHOD_NAME, url, parameters, headers, formKeyValues, timeoutMillis);
+    }
+
     /*******************************************************************************************************************
      HTTP DELETE
      ******************************************************************************************************************/
@@ -796,8 +857,33 @@ public abstract class HttpOperator {
         executeHttpVoid(HttpDelete.METHOD_NAME, url, parameters, headers, payload, timeoutMillis);
     }
 
+    public <T> T deleteFor(String url, Collection<NameValuePair> parameters, Collection<NameValuePair> headers, Collection<NameValuePair> formKeyValues, int timeoutMillis, Class<T> clazz) throws Exception {
+        return executeHttpFor(HttpPost.METHOD_NAME, url, parameters, headers, formKeyValues, timeoutMillis, TF.constructType(clazz));
+    }
+
+    public <T> T deleteFor(String url, Collection<NameValuePair> parameters, Collection<NameValuePair> headers, Collection<NameValuePair> formKeyValues, int timeoutMillis, TypeReference<T> tr) throws Exception {
+        return executeHttpFor(HttpPost.METHOD_NAME, url, parameters, headers, formKeyValues, timeoutMillis, TF.constructType(tr));
+    }
+
+    public byte[] deleteFor(String url, Collection<NameValuePair> parameters, Collection<NameValuePair> headers, Collection<NameValuePair> formKeyValues, int timeoutMillis) throws Exception {
+        return executeHttpForRaw(HttpPost.METHOD_NAME, url, parameters, headers, formKeyValues, timeoutMillis);
+    }
+
+    public InputStream deleteForStream(String url, Collection<NameValuePair> parameters, Collection<NameValuePair> headers, Collection<NameValuePair> formKeyValues, int timeoutMillis) throws Exception {
+        return executeHttpForStream(HttpPost.METHOD_NAME, url, parameters, headers, formKeyValues, timeoutMillis);
+    }
+
+    public void deleteVoid(String url, Collection<NameValuePair> parameters, Collection<NameValuePair> headers, Collection<NameValuePair> formKeyValues, int timeoutMillis) throws Exception {
+        executeHttpVoid(HttpPost.METHOD_NAME, url, parameters, headers, formKeyValues, timeoutMillis);
+    }
+
     private <T> T executeHttpFor(String method, String url, Collection<NameValuePair> parameters, Collection<NameValuePair> headers, Object payload, int timeoutMillis, JavaType type) throws Exception {
         HttpEntity entity = executeHttpForEntity(method, url, parameters, headers, payload, timeoutMillis);
+        return deserializeFromJson(EntityUtils.toByteArray(entity), type);
+    }
+
+    private <T> T executeHttpFor(String method, String url, Collection<NameValuePair> parameters, Collection<NameValuePair> headers, Collection<NameValuePair> formKeyValues, int timeoutMillis, JavaType type) throws Exception {
+        HttpEntity entity = executeHttpForEntity(method, url, parameters, headers, formKeyValues, timeoutMillis);
         return deserializeFromJson(EntityUtils.toByteArray(entity), type);
     }
 
@@ -810,6 +896,10 @@ public abstract class HttpOperator {
         return EntityUtils.toByteArray(executeHttpForEntity(method, url, parameters, headers, payload, timeoutMillis));
     }
 
+    private byte[] executeHttpForRaw(String method, String url, Collection<NameValuePair> parameters, Collection<NameValuePair> headers, Collection<NameValuePair> formKeyValues, int timeoutMillis) throws Exception {
+        return EntityUtils.toByteArray(executeHttpForEntity(method, url, parameters, headers, formKeyValues, timeoutMillis));
+    }
+
     private byte[] executeHttpForRaw(String method, String url, Collection<NameValuePair> parameters, Collection<NameValuePair> headers, InputStream is, String key, int timeoutMillis) throws Exception {
         return EntityUtils.toByteArray(executeHttpForEntity(method, url, parameters, headers, is, key, timeoutMillis));
     }
@@ -818,12 +908,20 @@ public abstract class HttpOperator {
         return executeHttpForEntity(method, url, parameters, headers, payload, timeoutMillis).getContent();
     }
 
+    private InputStream executeHttpForStream(String method, String url, Collection<NameValuePair> parameters, Collection<NameValuePair> headers, Collection<NameValuePair> formKeyValues, int timeoutMillis) throws Exception {
+        return executeHttpForEntity(method, url, parameters, headers, formKeyValues, timeoutMillis).getContent();
+    }
+
     private InputStream executeHttpForStream(String method, String url, Collection<NameValuePair> parameters, Collection<NameValuePair> headers, InputStream is, String key, int timeoutMillis) throws Exception {
         return executeHttpForEntity(method, url, parameters, headers, is, key, timeoutMillis).getContent();
     }
 
     private void executeHttpVoid(String method, String url, Collection<NameValuePair> parameters, Collection<NameValuePair> headers, Object payload, int timeoutMillis) throws Exception {
         EntityUtils.consumeQuietly(executeHttpForEntity(method, url, parameters, headers, payload, timeoutMillis));
+    }
+
+    private void executeHttpVoid(String method, String url, Collection<NameValuePair> parameters, Collection<NameValuePair> headers, Collection<NameValuePair> formKeyValues, int timeoutMillis) throws Exception {
+        EntityUtils.consumeQuietly(executeHttpForEntity(method, url, parameters, headers, formKeyValues, timeoutMillis));
     }
 
     private void executeHttpVoid(String method, String url, Collection<NameValuePair> parameters, Collection<NameValuePair> headers, InputStream is, String key, int timeoutMillis) throws Exception {
@@ -835,6 +933,18 @@ public abstract class HttpOperator {
         if (parameters != null) parameters.forEach(rb::addParameter);
         if (headers != null) headers.forEach(h -> rb.addHeader(h.getName(), h.getValue()));
         if (payload != null) rb.setEntity(new StringEntity(serializeAsJsonString(payload), ContentType.APPLICATION_JSON));
+        if (timeoutMillis > 0) {
+            RequestConfig rc = RequestConfig.copy(RequestConfig.DEFAULT).setConnectTimeout(timeoutMillis).setSocketTimeout(timeoutMillis).build();
+            rb.setConfig(rc);
+        }
+        return executeHttp(rb.build()).getEntity();
+    }
+
+    private HttpEntity executeHttpForEntity(String method, String url, Collection<NameValuePair> parameters, Collection<NameValuePair> headers, Collection<NameValuePair> formKeyValues, int timeoutMillis) throws Exception {
+        RequestBuilder rb = RequestBuilder.create(method).setUri(url);
+        if (parameters != null) parameters.forEach(rb::addParameter);
+        if (headers != null) headers.forEach(h -> rb.addHeader(h.getName(), h.getValue()));
+        if (formKeyValues != null) rb.setEntity(new UrlEncodedFormEntity(formKeyValues));
         if (timeoutMillis > 0) {
             RequestConfig rc = RequestConfig.copy(RequestConfig.DEFAULT).setConnectTimeout(timeoutMillis).setSocketTimeout(timeoutMillis).build();
             rb.setConfig(rc);
