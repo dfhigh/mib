@@ -37,8 +37,6 @@ import static org.mib.common.validator.Validator.validateStringNotBlank;
 @NotThreadSafe
 public class HttpExecution {
 
-    private static final int MAX_CONN = 8;
-
     private static volatile HttpOperator HTTP;
 
     private final RequestBuilder rb;
@@ -52,7 +50,7 @@ public class HttpExecution {
         if (HTTP == null) {
             synchronized (HttpExecution.class) {
                 if (HTTP == null) {
-                    HTTP = new SyncHttpOperator(MAX_CONN, MAX_CONN);
+                    HTTP = new SyncHttpOperator();
                 }
             }
         }
@@ -175,7 +173,7 @@ public class HttpExecution {
 
     public HttpResponse execute(HttpOperator http) throws Exception {
         validateObjectNotNull(http, "http operator");
-        return http.executeHttp(rb.build());
+        return http.executeHttpWithRetry(rb.build());
     }
 
     public HttpResponse execute() throws Exception {

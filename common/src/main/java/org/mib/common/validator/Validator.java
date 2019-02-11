@@ -32,6 +32,18 @@ public class Validator {
         }
     }
 
+    public static void validateDoublePositive(double num, String identity) throws IllegalArgumentException {
+        if (num <= 0.0d) {
+            throw new IllegalArgumentException(identity + " " + num + " must be positive");
+        }
+    }
+
+    public static void validateDoubleNotNegative(double num, String identity) throws IllegalArgumentException {
+        if (num < 0.0d) {
+            throw new IllegalArgumentException(identity + " " + num + " can't be negative");
+        }
+    }
+
     public static void validateStringNotBlank(String str, String identity) throws IllegalArgumentException {
         if (StringUtils.isBlank(str)) {
             throw new IllegalArgumentException(identity + " can't be blank");

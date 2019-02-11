@@ -1,7 +1,5 @@
 package org.mib.rest.client;
 
-import org.mib.rest.context.RestContext;
-import org.mib.rest.context.RestScope;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpUriRequest;
@@ -12,7 +10,6 @@ import javax.annotation.concurrent.ThreadSafe;
 import java.io.IOException;
 
 import static org.mib.common.validator.Validator.validateIntPositive;
-import static org.mib.rest.utils.ResponseInterceptor.intercept;
 
 /**
  * Created by dufei on 18/5/8.
@@ -34,15 +31,11 @@ public class SyncHttpOperator extends HttpOperator {
     }
 
     @Override
-    public HttpResponse executeHttp(HttpUriRequest request) throws Exception {
+    protected HttpResponse executeHttp(HttpUriRequest request) throws Exception {
         log.debug("executing {}...", request);
-        RestContext rc = RestScope.getRestContext();
-        if (rc.getContextHeaders() != null && !rc.getContextHeaders().isEmpty()) {
-            rc.getContextHeaders().forEach(request::addHeader);
-        }
         HttpResponse response = http.execute(request);
         log.debug("executed {} with response {}", request, response);
-        return intercept(request, response);
+        return response;
     }
 
     @Override

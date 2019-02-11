@@ -57,7 +57,7 @@ public class SyncRestExecutor<R extends HttpUriRequest, T> implements PipeOutput
         if (StringUtils.isNotBlank(cookie)) payload.addHeader("Cookie", cookie);
         try {
             long start = System.currentTimeMillis();
-            response = http.executeHttp(payload);
+            response = http.executeHttpWithRetry(payload);
             response.setHeader(REQUEST_LATENCY_KEY, String.valueOf(System.currentTimeMillis()-start));
             handler.completed(response);
         } catch (Exception e) {

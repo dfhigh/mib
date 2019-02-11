@@ -1,10 +1,9 @@
 package org.mib.rest.client;
 
+import org.apache.http.nio.protocol.BasicAsyncRequestProducer;
 import org.mib.rest.client.callback.HttpResponseHandler;
 import org.mib.rest.client.callback.RequestAwareAsyncResponseConsumer;
 import org.mib.rest.context.IterableHttpContext;
-import org.mib.rest.context.RestContext;
-import org.mib.rest.context.RestScope;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpResponse;
@@ -25,7 +24,6 @@ import org.apache.http.impl.nio.client.CloseableHttpAsyncClient;
 import org.apache.http.impl.nio.client.HttpAsyncClients;
 import org.apache.http.impl.nio.reactor.IOReactorConfig;
 import org.apache.http.nio.client.methods.HttpAsyncMethods;
-import org.apache.http.nio.protocol.HttpAsyncRequestProducer;
 import org.apache.http.nio.protocol.HttpAsyncResponseConsumer;
 
 import javax.annotation.concurrent.ThreadSafe;
@@ -38,7 +36,6 @@ import static org.mib.common.validator.Validator.validateIntPositive;
 import static org.mib.common.validator.Validator.validateObjectNotNull;
 import static org.mib.rest.utils.ResponseInterceptor.REQUEST_KEY;
 import static org.mib.rest.utils.ResponseInterceptor.REQUEST_TIME_KEY;
-import static org.mib.rest.utils.ResponseInterceptor.intercept;
 
 /**
  * Created by dufei on 18/5/8.
@@ -123,6 +120,7 @@ public class AsyncHttpOperator extends HttpOperator {
             RequestConfig rc = RequestConfig.copy(RequestConfig.DEFAULT).setConnectTimeout(timeoutMillis).setSocketTimeout(timeoutMillis).build();
             rb.setConfig(rc);
         }
+        contextInjection(rb);
         executeHttp(rb.build(), callback);
     }
 
@@ -142,6 +140,7 @@ public class AsyncHttpOperator extends HttpOperator {
             RequestConfig rc = RequestConfig.copy(RequestConfig.DEFAULT).setConnectTimeout(timeoutMillis).setSocketTimeout(timeoutMillis).build();
             rb.setConfig(rc);
         }
+        contextInjection(rb);
         executeHttp(rb.build(), callback);
     }
 
@@ -156,33 +155,28 @@ public class AsyncHttpOperator extends HttpOperator {
     public void executeHttp(HttpUriRequest request, HttpAsyncResponseConsumer<HttpResponse> consumer, IterableHttpContext context, FutureCallback<HttpResponse> callback) {
         log.debug("executing {}...", request);
         validateObjectNotNull(consumer, "async response consumer");
-        RestContext rc = RestScope.getRestContext();
-        if (rc.getContextHeaders() != null && !rc.getContextHeaders().isEmpty()) {
-            rc.getContextHeaders().forEach(request::addHeader);
-        }
         if (context != null) {
             context.setAttribute(REQUEST_KEY, request);
             context.setAttribute(REQUEST_TIME_KEY, System.currentTimeMillis());
         }
+        contextInjection(request);
         http.execute(HttpAsyncMethods.create(request), consumer, context, callback);
     }
 
-    public void executeHttp(HttpAsyncRequestProducer producer, HttpAsyncResponseConsumer<HttpResponse> consumer, IterableHttpContext context, FutureCallback<HttpResponse> callback) {
+    public void executeHttp(BasicAsyncRequestProducer producer, HttpAsyncResponseConsumer<HttpResponse> consumer, IterableHttpContext context, FutureCallback<HttpResponse> callback) {
         log.debug("executing {}...", producer);
         validateObjectNotNull(producer, "request producer");
         validateObjectNotNull(consumer, "async response consumer");
+        contextInjection(producer.generateRequest());
         http.execute(producer, consumer, context, callback);
     }
 
     @Override
-    public HttpResponse executeHttp(HttpUriRequest request) throws Exception {
+    protected HttpResponse executeHttp(HttpUriRequest request) throws Exception {
         log.debug("executing {}...", request);
-        RestContext rc = RestScope.getRestContext();
-        if (rc.getContextHeaders() != null && !rc.getContextHeaders().isEmpty()) {
-            rc.getContextHeaders().forEach(request::addHeader);
-        }
         HttpResponse response = http.execute(request, SYNC_CB).get();
-        return intercept(request, response);
+        log.debug("executed {} with response {}", request, response);
+        return response;
     }
 
     @Override

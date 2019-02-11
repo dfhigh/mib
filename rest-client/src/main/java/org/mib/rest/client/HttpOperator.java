@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.type.TypeFactory;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpEntity;
+import org.apache.http.HttpRequest;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.config.RequestConfig;
@@ -22,12 +23,18 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.entity.mime.HttpMultipartMode;
 import org.apache.http.entity.mime.MultipartEntityBuilder;
 import org.apache.http.util.EntityUtils;
+import org.mib.rest.client.retry.RetryStrategy;
+import org.mib.rest.context.RestContext;
+import org.mib.rest.context.RestScope;
 
 import java.io.InputStream;
 import java.util.Collection;
 
 import static org.mib.common.ser.Serdes.deserializeFromJson;
 import static org.mib.common.ser.Serdes.serializeAsJsonString;
+import static org.mib.common.validator.Validator.validateIntPositive;
+import static org.mib.common.validator.Validator.validateObjectNotNull;
+import static org.mib.rest.utils.ResponseInterceptor.intercept;
 
 /**
  * Created by dufei on 17/12/1.
@@ -38,6 +45,18 @@ public abstract class HttpOperator {
     static final int DEFAULT_CONN = 8;
     static final int DEFAULT_CONN_PER_ROUTE = 4;
     private static final TypeFactory TF = TypeFactory.defaultInstance();
+
+    private final RetryStrategy retryStrategy;
+
+    HttpOperator() {
+        // default retry strategy is never retry
+        this((req, res, e, attempts) -> -1);
+    }
+
+    HttpOperator(final RetryStrategy retryStrategy) {
+        validateObjectNotNull(retryStrategy, "retry strategy");
+        this.retryStrategy = retryStrategy;
+    }
 
     /*******************************************************************************************************************
      HTTP GET
@@ -939,7 +958,8 @@ public abstract class HttpOperator {
             RequestConfig rc = RequestConfig.copy(RequestConfig.DEFAULT).setConnectTimeout(timeoutMillis).setSocketTimeout(timeoutMillis).build();
             rb.setConfig(rc);
         }
-        return executeHttp(rb.build()).getEntity();
+        contextInjection(rb);
+        return executeHttpWithRetry(rb.build()).getEntity();
     }
 
     private HttpEntity executeHttpForEntity(String method, String url, Collection<NameValuePair> parameters, Collection<NameValuePair> headers, Collection<NameValuePair> formKeyValues, int timeoutMillis) throws Exception {
@@ -951,7 +971,8 @@ public abstract class HttpOperator {
             RequestConfig rc = RequestConfig.copy(RequestConfig.DEFAULT).setConnectTimeout(timeoutMillis).setSocketTimeout(timeoutMillis).build();
             rb.setConfig(rc);
         }
-        return executeHttp(rb.build()).getEntity();
+        contextInjection(rb);
+        return executeHttpWithRetry(rb.build()).getEntity();
     }
 
     private HttpEntity executeHttpForEntity(String method, String url, Collection<NameValuePair> parameters, Collection<NameValuePair> headers, InputStream is, String key, int timeoutMillis) throws Exception {
@@ -970,9 +991,48 @@ public abstract class HttpOperator {
             RequestConfig rc = RequestConfig.copy(RequestConfig.DEFAULT).setConnectTimeout(timeoutMillis).setSocketTimeout(timeoutMillis).build();
             rb.setConfig(rc);
         }
-        return executeHttp(rb.build()).getEntity();
+        contextInjection(rb);
+        return executeHttpWithRetry(rb.build()).getEntity();
     }
 
-    public abstract HttpResponse executeHttp(HttpUriRequest request) throws Exception;
+    protected void contextInjection(RequestBuilder requestBuilder) {
+        RestContext rc = RestScope.getRestContext();
+        if (rc.getContextHeaders() != null && !rc.getContextHeaders().isEmpty()) {
+            rc.getContextHeaders().forEach(requestBuilder::addHeader);
+        }
+    }
+
+    protected void contextInjection(HttpRequest request) {
+        RestContext rc = RestScope.getRestContext();
+        if (rc.getContextHeaders() != null && !rc.getContextHeaders().isEmpty()) {
+            rc.getContextHeaders().forEach(request::addHeader);
+        }
+    }
+
+    public HttpResponse executeHttpWithRetry(HttpUriRequest request) throws Exception {
+        return executeHttpWithRetry(request, 1);
+    }
+
+    public HttpResponse executeHttpWithRetry(HttpUriRequest request, int attempts) throws Exception {
+        validateObjectNotNull(request, "request");
+        validateIntPositive(attempts, "attempt count");
+        Exception e = null;
+        HttpResponse response = null;
+        try {
+            response = executeHttp(request);
+        } catch (Exception e1) {
+            log.error("failed to execute request {} in attempt {}", request, attempts, e1);
+            e = e1;
+        }
+        int intervalMillis = retryStrategy.getRetryIntervalMillis(request, response, e, attempts);
+        if (intervalMillis >= 0) {
+            Thread.sleep(intervalMillis);
+            return executeHttpWithRetry(request, ++attempts);
+        }
+        if (e != null) throw e;
+        return intercept(request, response);
+    }
+
+    protected abstract HttpResponse executeHttp(HttpUriRequest request) throws Exception;
 
 }
