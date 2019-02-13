@@ -1,10 +1,11 @@
-package org.mib.rest.model;
+package org.mib.rest.model.list;
 
 import org.mib.rest.utils.QueryEscaper;
 import com.google.common.collect.Sets;
 import lombok.Builder;
 import lombok.Data;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -14,23 +15,19 @@ import java.util.Set;
 @Data
 @Builder
 public class ListElementRequest {
-    private String name;
     private long offset;
     private long limit;
     private String orderBy;
     private String ordering;
-    private Map<String, Object> params;
+    private List<Filter> filters;
+    private List<Sorter> sorters;
     private Map<String, Set<Object>> ins;
 
     public ListElementRequest escaped() {
-        if (name != null) name = QueryEscaper.sqlEscape(name);
-        if (params != null) {
-            for (Map.Entry<String, Object> entry : params.entrySet()) {
-                if (entry.getValue() instanceof String) {
-                    String str = (String) entry.getValue();
-                    entry.setValue(QueryEscaper.sqlEscape(str));
-                }
-            }
+        if (filters != null) {
+            filters.stream().filter(filter -> filter.getValue() instanceof String).forEach(
+                    filter -> filter.setValue(QueryEscaper.sqlEscape((String) filter.getValue()))
+            );
         }
         if (ins != null) {
             for (Map.Entry<String, Set<Object>> entry : ins.entrySet()) {

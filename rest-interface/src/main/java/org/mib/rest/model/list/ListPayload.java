@@ -1,4 +1,4 @@
-package org.mib.rest.model;
+package org.mib.rest.model.list;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
