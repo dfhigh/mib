@@ -1,12 +1,13 @@
 package org.mib.rest.model.list;
 
+import com.fasterxml.jackson.annotation.JsonValue;
 import lombok.Getter;
 
 public enum Operator {
 
     LT("<"), LTE("<="), EQ("="), GTE(">="), GT(">"), NE("<>");
 
-    private @Getter String expr;
+    private @Getter @JsonValue String expr;
 
     Operator(final String expr) {
         this.expr = expr;

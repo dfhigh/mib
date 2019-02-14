@@ -1,5 +1,7 @@
 package org.mib.rest.model.list;
 
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import org.mib.rest.utils.QueryEscaper;
 import com.google.common.collect.Sets;
 import lombok.Builder;
@@ -14,6 +16,8 @@ import java.util.Set;
  */
 @Data
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class ListElementRequest {
     private long offset;
     private long limit;
