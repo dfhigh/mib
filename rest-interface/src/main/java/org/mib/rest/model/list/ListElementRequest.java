@@ -17,11 +17,9 @@ import java.util.Set;
 public class ListElementRequest {
     private long offset;
     private long limit;
-    private String orderBy;
-    private String ordering;
     private List<Filter> filters;
     private List<Sorter> sorters;
-    private Map<String, Set<Object>> ins;
+    private Map<String, Set<?>> ins;
 
     public ListElementRequest escaped() {
         if (filters != null) {
@@ -30,7 +28,7 @@ public class ListElementRequest {
             );
         }
         if (ins != null) {
-            for (Map.Entry<String, Set<Object>> entry : ins.entrySet()) {
+            for (Map.Entry<String, Set<?>> entry : ins.entrySet()) {
                 Set<Object> set = Sets.newHashSetWithExpectedSize(entry.getValue().size());
                 for (Object obj : entry.getValue()) {
                     if (obj instanceof String) {
