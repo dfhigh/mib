@@ -19,6 +19,7 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ListElementRequest {
+    private boolean includeHidden;
     private long offset;
     private long limit;
     private List<Filter> filters;
