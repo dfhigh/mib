@@ -173,6 +173,7 @@ public class HttpExecution {
 
     public HttpResponse execute(HttpOperator http) throws Exception {
         validateObjectNotNull(http, "http operator");
+        http.contextInjection(rb);
         return http.executeHttpWithRetry(rb.build());
     }
 
