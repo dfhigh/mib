@@ -9,7 +9,7 @@ import org.apache.http.util.EntityUtils;
 
 import java.io.IOException;
 
-import static org.mib.common.ser.Serdes.deserializeFromJson;
+import static org.mib.common.ser.Serdes.fromJson;
 import static org.mib.common.validator.Validator.validateObjectNotNull;
 
 @Slf4j
@@ -30,7 +30,7 @@ public abstract class JsonHttpResponseHandler<T> extends HttpResponseHandler<T> 
     @Override
     protected T convert(HttpResponse response) {
         try {
-            return deserializeFromJson(EntityUtils.toByteArray(response.getEntity()), type);
+            return fromJson(EntityUtils.toByteArray(response.getEntity()), type);
         } catch (IOException e) {
             EntityUtils.consumeQuietly(response.getEntity());
             log.error("failed to deserialize response as {}", type, e);

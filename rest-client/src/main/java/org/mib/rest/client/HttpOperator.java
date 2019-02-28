@@ -30,8 +30,8 @@ import org.mib.rest.context.RestScope;
 import java.io.InputStream;
 import java.util.Collection;
 
-import static org.mib.common.ser.Serdes.deserializeFromJson;
-import static org.mib.common.ser.Serdes.serializeAsJsonString;
+import static org.mib.common.ser.Serdes.fromJson;
+import static org.mib.common.ser.Serdes.toJsonText;
 import static org.mib.common.validator.Validator.validateIntPositive;
 import static org.mib.common.validator.Validator.validateObjectNotNull;
 import static org.mib.rest.utils.ResponseInterceptor.intercept;
@@ -900,17 +900,17 @@ public abstract class HttpOperator {
 
     private <T> T executeHttpFor(String method, String url, Collection<NameValuePair> parameters, Collection<NameValuePair> headers, Object payload, int timeoutMillis, JavaType type) throws Exception {
         HttpEntity entity = executeHttpForEntity(method, url, parameters, headers, payload, timeoutMillis);
-        return deserializeFromJson(EntityUtils.toByteArray(entity), type);
+        return fromJson(EntityUtils.toByteArray(entity), type);
     }
 
     private <T> T executeHttpFor(String method, String url, Collection<NameValuePair> parameters, Collection<NameValuePair> headers, Collection<NameValuePair> formKeyValues, int timeoutMillis, JavaType type) throws Exception {
         HttpEntity entity = executeHttpForEntity(method, url, parameters, headers, formKeyValues, timeoutMillis);
-        return deserializeFromJson(EntityUtils.toByteArray(entity), type);
+        return fromJson(EntityUtils.toByteArray(entity), type);
     }
 
     private <T> T executeHttpFor(String method, String url, Collection<NameValuePair> parameters, Collection<NameValuePair> headers, InputStream is, String key, int timeoutMillis, JavaType type) throws Exception {
         HttpEntity entity = executeHttpForEntity(method, url, parameters, headers, is, key, timeoutMillis);
-        return deserializeFromJson(EntityUtils.toByteArray(entity), type);
+        return fromJson(EntityUtils.toByteArray(entity), type);
     }
 
     private byte[] executeHttpForRaw(String method, String url, Collection<NameValuePair> parameters, Collection<NameValuePair> headers, Object payload, int timeoutMillis) throws Exception {
@@ -953,7 +953,7 @@ public abstract class HttpOperator {
         RequestBuilder rb = RequestBuilder.create(method).setUri(url);
         if (parameters != null) parameters.forEach(rb::addParameter);
         if (headers != null) headers.forEach(h -> rb.addHeader(h.getName(), h.getValue()));
-        if (payload != null) rb.setEntity(new StringEntity(serializeAsJsonString(payload), ContentType.APPLICATION_JSON));
+        if (payload != null) rb.setEntity(new StringEntity(toJsonText(payload), ContentType.APPLICATION_JSON));
         if (timeoutMillis > 0) {
             RequestConfig rc = RequestConfig.copy(RequestConfig.DEFAULT).setConnectTimeout(timeoutMillis).setSocketTimeout(timeoutMillis).build();
             rb.setConfig(rc);

@@ -31,7 +31,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Map;
 
-import static org.mib.common.ser.Serdes.serializeAsJsonString;
+import static org.mib.common.ser.Serdes.toJsonText;
 import static org.mib.common.validator.Validator.validateIntPositive;
 import static org.mib.common.validator.Validator.validateObjectNotNull;
 import static org.mib.rest.utils.ResponseInterceptor.REQUEST_KEY;
@@ -115,7 +115,7 @@ public class AsyncHttpOperator extends HttpOperator {
         RequestBuilder rb = RequestBuilder.create(method).setUri(url);
         if (parameters != null) parameters.forEach(rb::addParameter);
         if (headers != null) headers.forEach(rb::setHeader);
-        if (payload != null) rb.setEntity(new StringEntity(serializeAsJsonString(payload), ContentType.APPLICATION_JSON));
+        if (payload != null) rb.setEntity(new StringEntity(toJsonText(payload), ContentType.APPLICATION_JSON));
         if (timeoutMillis > 0) {
             RequestConfig rc = RequestConfig.copy(RequestConfig.DEFAULT).setConnectTimeout(timeoutMillis).setSocketTimeout(timeoutMillis).build();
             rb.setConfig(rc);

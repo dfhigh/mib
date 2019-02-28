@@ -27,8 +27,8 @@ import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.Collection;
 
-import static org.mib.common.ser.Serdes.deserializeFromJson;
-import static org.mib.common.ser.Serdes.serializeAsJsonString;
+import static org.mib.common.ser.Serdes.fromJson;
+import static org.mib.common.ser.Serdes.toJsonText;
 import static org.mib.common.validator.Validator.validateCollectionNotEmptyContainsNoNull;
 import static org.mib.common.validator.Validator.validateIntNotNegative;
 import static org.mib.common.validator.Validator.validateObjectNotNull;
@@ -128,7 +128,7 @@ public class HttpExecution {
 
     public HttpExecution jsonBody(Object payload) {
         validateObjectNotNull(payload, "json payload");
-        rb.setEntity(new StringEntity(serializeAsJsonString(payload), ContentType.APPLICATION_JSON));
+        rb.setEntity(new StringEntity(toJsonText(payload), ContentType.APPLICATION_JSON));
         return this;
     }
 
@@ -206,7 +206,7 @@ public class HttpExecution {
     }
 
     public <T> T executeForJson(HttpOperator http, Class<T> clazz) throws Exception {
-        return deserializeFromJson(executeForRaw(http), clazz);
+        return fromJson(executeForRaw(http), clazz);
     }
 
     public <T> T executeForJson(Class<T> clazz) throws Exception {
@@ -214,7 +214,7 @@ public class HttpExecution {
     }
 
     public <T> T executeForJson(HttpOperator http, TypeReference<T> tr) throws Exception {
-        return deserializeFromJson(executeForRaw(http), tr);
+        return fromJson(executeForRaw(http), tr);
     }
 
     public <T> T executeForJson(TypeReference<T> tr) throws Exception {

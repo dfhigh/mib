@@ -14,7 +14,7 @@ import org.mib.rest.exception.ResourceNotFoundException;
 import org.mib.rest.exception.UnauthorizedException;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
-import static org.mib.common.ser.Serdes.deserializeFromJson;
+import static org.mib.common.ser.Serdes.fromJson;
 
 /**
  * Created by dufei on 18/5/9.
@@ -76,7 +76,7 @@ public class ResponseInterceptor {
 
     private static String extractErrorMessage(byte[] bytes) {
         try {
-            ErrorResponse er = deserializeFromJson(bytes, ErrorResponse.class);
+            ErrorResponse er = fromJson(bytes, ErrorResponse.class);
             return er.getMsg() == null ? er.getError() : er.getMsg();
         } catch (IllegalArgumentException e) {
             return new String(bytes, UTF_8);

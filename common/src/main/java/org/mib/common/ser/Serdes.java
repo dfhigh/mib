@@ -22,34 +22,34 @@ public class Serdes {
 
     private static final ObjectWriter OW = OM.writerWithDefaultPrettyPrinter();
 
-    public static String serializeAsJsonString(Object object) {
+    public static String toJsonText(Object object) {
         validateObjectNotNull(object, "object");
         try {
             return OM.writeValueAsString(object);
         } catch (IOException e) {
-            throw new IllegalArgumentException("failed to serialize object to json", e);
+            throw new IllegalArgumentException("failed to serialize object as json", e);
         }
     }
 
-    public static String serializeAsPrettyJsonString(Object object) {
+    public static String toPrettyJsonText(Object object) {
         validateObjectNotNull(object, "object");
         try {
             return OW.writeValueAsString(object);
         } catch (IOException e) {
-            throw new IllegalArgumentException("failed to serialize object to json", e);
+            throw new IllegalArgumentException("failed to serialize object as json", e);
         }
     }
 
-    public static byte[] serializeAsJsonBytes(Object object) {
+    public static byte[] toJsonBytes(Object object) {
         validateObjectNotNull(object, "object");
         try {
             return OM.writeValueAsBytes(object);
         } catch (IOException e) {
-            throw new IllegalArgumentException("failed to serialize object to json", e);
+            throw new IllegalArgumentException("failed to serialize object as json bytes", e);
         }
     }
 
-    public static <T> T deserializeFromJson(String json, Class<T> clazz) {
+    public static <T> T fromJson(String json, Class<T> clazz) {
         if (json == null) return null;
         try {
             return OM.readValue(json, clazz);
@@ -58,7 +58,7 @@ public class Serdes {
         }
     }
 
-    public static <T> T deserializeFromJson(byte[] bytes, Class<T> clazz) {
+    public static <T> T fromJson(byte[] bytes, Class<T> clazz) {
         if (bytes == null) return null;
         try {
             return OM.readValue(bytes, clazz);
@@ -67,7 +67,7 @@ public class Serdes {
         }
     }
 
-    public static <T> T deserializeFromJson(String json, TypeReference<T> tr) {
+    public static <T> T fromJson(String json, TypeReference<T> tr) {
         if (json == null) return null;
         try {
             return OM.readValue(json, tr);
@@ -76,7 +76,7 @@ public class Serdes {
         }
     }
 
-    public static <T> T deserializeFromJson(byte[] bytes, TypeReference<T> tr) {
+    public static <T> T fromJson(byte[] bytes, TypeReference<T> tr) {
         if (bytes == null) return null;
         try {
             return OM.readValue(bytes, tr);
@@ -85,7 +85,7 @@ public class Serdes {
         }
     }
 
-    public static <T> T deserializeFromJson(String json, JavaType type) {
+    public static <T> T fromJson(String json, JavaType type) {
         if (json == null) return null;
         try {
             return OM.readValue(json, type);
@@ -94,7 +94,7 @@ public class Serdes {
         }
     }
 
-    public static <T> T deserializeFromJson(byte[] bytes, JavaType type) {
+    public static <T> T fromJson(byte[] bytes, JavaType type) {
         if (bytes == null) return null;
         try {
             return OM.readValue(bytes, type);
