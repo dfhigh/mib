@@ -20,6 +20,11 @@
         </dependency>
         <dependency>
             <groupId>org.mib</groupId>
+            <artifactId>rest-context</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.mib</groupId>
             <artifactId>common</artifactId>
             <version>${project.version}</version>
         </dependency>
