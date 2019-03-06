@@ -8,7 +8,7 @@ import java.util.Map;
 @Data
 public class RestContext implements Cloneable {
 
-    private Map<String, String> contextHeaders;
+    private Map<String, String> contextHeaders = Maps.newHashMap();
 
     @Override
     public RestContext clone() throws CloneNotSupportedException {
