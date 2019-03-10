@@ -10,7 +10,7 @@ import java.util.concurrent.TimeUnit;
 
 import static java.util.Objects.requireNonNull;
 
-public class ProphetMetrics implements Metrics {
+public class RequestMetrics implements Metrics {
 
     private static final String LINE_DELIMITER = "\n";
     private static final String METRICS_DELIMITER = "-----------------------------------------------------------------";
@@ -30,7 +30,7 @@ public class ProphetMetrics implements Metrics {
     private boolean closed;
     private String status;
 
-    public ProphetMetrics(final String service, final String operation, final String hostname,
+    public RequestMetrics(final String service, final String operation, final String hostname,
                           final int port, final String requestId) {
         this.service = requireNonNull(service);
         this.operation = requireNonNull(operation);
