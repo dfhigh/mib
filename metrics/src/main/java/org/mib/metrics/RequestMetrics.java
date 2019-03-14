@@ -5,6 +5,7 @@ import org.mib.metrics.time.TimeEvent;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
@@ -23,18 +24,22 @@ public class RequestMetrics implements Metrics {
     private final String operation;
     private final String endpoint;
     private final String requestId;
-    private final long timestamp;
+    private long timestamp;
     private final Map<String, Long> counters;
     private final Map<String, String> metrics;
     private final Map<String, TimeEvent> timeEvents;
     private boolean closed;
     private String status;
 
-    public RequestMetrics(final String service, final String operation, final String hostname,
-                          final int port, final String requestId) {
+    public RequestMetrics(final String service, final String operation, final String hostname, final int port,
+                          final String requestId) {
+        this(service, operation, hostname + ":" + port, requestId);
+    }
+
+    private RequestMetrics(final String service, final String operation, final String endpoint, final String requestId) {
         this.service = requireNonNull(service);
         this.operation = requireNonNull(operation);
-        this.endpoint = service + "_" + operation + "_" + requireNonNull(hostname) + ":" + port;
+        this.endpoint = service + "_" + operation + "_" + requireNonNull(endpoint);
         this.requestId = requireNonNull(requestId);
         this.timestamp = System.currentTimeMillis();
         this.counters = Maps.newConcurrentMap();
@@ -160,6 +165,52 @@ public class RequestMetrics implements Metrics {
             sb.append("Timers:").append(timeEvents.values().toString()).append(LINE_DELIMITER);
         }
         return sb.append(METRICS_DELIMITER).toString();
+    }
+
+    public static Metrics fromLogs(List<String> lines) throws Exception {
+        RequestMetrics metrics = new RequestMetrics(
+                // example: Service:predictor
+                lines.get(1).trim().substring(8).trim(),
+                // example: Operation:predict
+                lines.get(2).trim().substring(10).trim(),
+                // example: Endpoint:predictor_predict_docker02:7711
+                lines.get(3).trim().substring(9).trim(),
+                // example: RequestId:c4de56c4-9443-4e3f-8d3f-d8cdfc42c15c
+                lines.get(4).trim().substring(10).trim()
+        );
+        // example: Time:2016-12-16 16:29:55.468
+        metrics.timestamp = SDF.get().parse(lines.get(0).trim().substring(5).trim()).getTime();
+        // example: Status:OK
+        metrics.status = lines.get(5).trim().substring(7).trim();
+        // example: Counters:{request.success=1, cannon.requests=1}
+        String countersStr = lines.get(6).trim().substring(9).trim();
+        if (countersStr.length() > 2) {
+            String[] entries = countersStr.substring(1, countersStr.length() - 1).trim().split(",");
+            for (String entry : entries) {
+                String[] fields = entry.trim().split("=");
+                metrics.counters.put(fields[0].trim(), Long.parseLong(fields[1].trim()));
+            }
+        }
+        // example: Metrics:{cannon.hit=149, signature.total=2062}
+        String metricsStr = lines.get(7).trim().substring(8).trim();
+        if (metricsStr.length() > 2) {
+            String[] entries = metricsStr.substring(1, metricsStr.length() - 1).trim().split(",");
+            for (String entry : entries) {
+                String[] fields = entry.trim().split("=");
+                metrics.metrics.put(fields[0].trim(), fields[1].trim());
+            }
+        }
+        // example: Timers:[prediction.latency:129000 MICROSECONDS, fe.latency:67000 MICROSECONDS]
+        String timersStr = lines.get(8).trim().substring(7).trim();
+        if (timersStr.length() > 2) {
+            String[] entries = timersStr.substring(1, timersStr.length() - 1).trim().split(",");
+            for (String entry : entries) {
+                String[] fields = entry.trim().split(":");
+                String[] subs = fields[1].trim().split(" ");
+                metrics.timeEvents.put(fields[0], new TimeEvent(fields[0], 0, Long.parseLong(subs[0].trim()), TimeUnit.valueOf(subs[1].trim())));
+            }
+        }
+        return metrics;
     }
 
 }
