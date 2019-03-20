@@ -36,7 +36,7 @@ public class RequestMetrics implements Metrics {
         this(service, operation, hostname + ":" + port, requestId);
     }
 
-    private RequestMetrics(final String service, final String operation, final String endpoint, final String requestId) {
+    public RequestMetrics(final String service, final String operation, final String endpoint, final String requestId) {
         this.service = requireNonNull(service);
         this.operation = requireNonNull(operation);
         this.endpoint = service + "_" + operation + "_" + requireNonNull(endpoint);

@@ -19,6 +19,11 @@
     <dependencyManagement>
         <dependencies>
             <dependency>
+                <groupId>com.google.guava</groupId>
+                <artifactId>guava</artifactId>
+                <version>${guava.version}</version>
+            </dependency>
+            <dependency>
                 <artifactId>mockito-core</artifactId>
                 <groupId>org.mockito</groupId>
                 <version>2.8.9</version>
@@ -47,6 +52,11 @@
             <groupId>io.zipkin.reporter</groupId>
             <artifactId>zipkin-sender-urlconnection</artifactId>
             <version>${zipkin.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.google.inject</groupId>
+            <artifactId>guice</artifactId>
+            <version>4.2.2</version>
         </dependency>
         <!-- test dependencies -->
         <dependency>
