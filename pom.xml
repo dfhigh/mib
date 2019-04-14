@@ -15,6 +15,7 @@
         <module>rest-pipe</module>
         <module>metrics</module>
         <module>rest-context</module>
+        <module>cache-client</module>
     </modules>
     <name>mib</name>
 

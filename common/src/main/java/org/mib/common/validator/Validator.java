@@ -3,6 +3,7 @@ package org.mib.common.validator;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 
+import java.util.Arrays;
 import java.util.Collection;
 
 @Slf4j
@@ -92,5 +93,15 @@ public class Validator {
         validateObjectNotNull(collection, identity);
         validateIntRange(collection.size(), identity + " size", 1, size);
         collection.forEach(e -> validateObjectNotNull(e, identity + " element"));
+    }
+
+    public static <T> void validateArrayNotEmptyContainsNoNull(T[] array, String identity) throws IllegalArgumentException {
+        validateArrayNotEmptyContainsNoNullNoLargerThan(array, identity, Integer.MAX_VALUE);
+    }
+
+    public static <T> void validateArrayNotEmptyContainsNoNullNoLargerThan(T[] array, String identity, int size) throws IllegalArgumentException {
+        validateObjectNotNull(array, identity);
+        validateIntRange(array.length, identity + " size", 1, size);
+        Arrays.stream(array).forEach(e -> validateObjectNotNull(e, identity + " element"));
     }
 }
