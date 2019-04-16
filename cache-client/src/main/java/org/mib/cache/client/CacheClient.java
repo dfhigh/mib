@@ -62,7 +62,7 @@ public interface CacheClient<K, V> {
         Metrics metrics = MetricsScope.getMetrics();
         metrics.addTime("mset", start, end, TimeUnit.MILLISECONDS);
         metrics.addCounter("mset", 1);
-        metrics.addMetric("mset.size", keys.size());
+        metrics.addCounter("r.mset.size", keys.size());
     }
 
     default void _mset(List<K> keys, List<V> values, int ttlSeconds) {
@@ -84,7 +84,7 @@ public interface CacheClient<K, V> {
         Metrics metrics = MetricsScope.getMetrics();
         metrics.addTime("msetEx", start, end, TimeUnit.MILLISECONDS);
         metrics.addCounter("msetEx", 1);
-        metrics.addMetric("msetEx.size", keys.size());
+        metrics.addCounter("r.msetEx.size", keys.size());
     }
 
     default void _mset(List<K> keys, List<V> values, List<Integer> ttlSeconds) {
@@ -107,7 +107,7 @@ public interface CacheClient<K, V> {
         Metrics metrics = MetricsScope.getMetrics();
         metrics.addTime("msetEx", start, end, TimeUnit.MILLISECONDS);
         metrics.addCounter("msetEx", 1);
-        metrics.addMetric("msetEx.size", keys.size());
+        metrics.addCounter("r.msetEx.size", keys.size());
     }
 
     default void _mset(K[] keys, V[] values) {
@@ -128,7 +128,7 @@ public interface CacheClient<K, V> {
         Metrics metrics = MetricsScope.getMetrics();
         metrics.addTime("mset", start, end, TimeUnit.MILLISECONDS);
         metrics.addCounter("mset", 1);
-        metrics.addMetric("mset.size", keys.length);
+        metrics.addCounter("r.mset.size", keys.length);
     }
 
     default void _mset(K[] keys, V[] values, int ttlSeconds) {
@@ -150,7 +150,7 @@ public interface CacheClient<K, V> {
         Metrics metrics = MetricsScope.getMetrics();
         metrics.addTime("msetEx", start, end, TimeUnit.MILLISECONDS);
         metrics.addCounter("msetEx", 1);
-        metrics.addMetric("msetEx.size", keys.length);
+        metrics.addCounter("r.msetEx.size", keys.length);
     }
 
     default void _mset(K[] keys, V[] values, int[] ttlSeconds) {
@@ -172,7 +172,7 @@ public interface CacheClient<K, V> {
         Metrics metrics = MetricsScope.getMetrics();
         metrics.addTime("msetEx", start, end, TimeUnit.MILLISECONDS);
         metrics.addCounter("msetEx", 1);
-        metrics.addMetric("msetEx.size", keys.length);
+        metrics.addCounter("r.msetEx.size", keys.length);
     }
 
     V _get(K key);
@@ -185,7 +185,7 @@ public interface CacheClient<K, V> {
         Metrics metrics = MetricsScope.getMetrics();
         metrics.addTime("get", start, end, TimeUnit.MILLISECONDS);
         metrics.addCounter("get", 1);
-        metrics.addMetric("hit", result == null ? 0 : 1);
+        metrics.addCounter("r.get.hit", result == null ? 0 : 1);
         return result;
     }
 
@@ -201,8 +201,8 @@ public interface CacheClient<K, V> {
         Metrics metrics = MetricsScope.getMetrics();
         metrics.addTime("mget", start, end, TimeUnit.MILLISECONDS);
         metrics.addCounter("mget", 1);
-        metrics.addMetric("mget.size", keys.size());
-        metrics.addMetric("hit", ((double) result.stream().filter(Objects::nonNull).count()) / keys.size());
+        metrics.addCounter("r.mget.size", keys.size());
+        metrics.addCounter("r.mget.hit", result.stream().filter(Objects::nonNull).count());
         return result;
     }
 
@@ -219,8 +219,8 @@ public interface CacheClient<K, V> {
         Metrics metrics = MetricsScope.getMetrics();
         metrics.addTime("mget", start, end, TimeUnit.MILLISECONDS);
         metrics.addCounter("mget", 1);
-        metrics.addMetric("mget.size", keys.length);
-        metrics.addMetric("hit", ((double) Arrays.stream(result).filter(Objects::nonNull).count()) / keys.length);
+        metrics.addCounter("r.mget.size", keys.length);
+        metrics.addCounter("r.mget.hit", Arrays.stream(result).filter(Objects::nonNull).count());
         return result;
     }
 
@@ -248,7 +248,7 @@ public interface CacheClient<K, V> {
         Metrics metrics = MetricsScope.getMetrics();
         metrics.addTime("mdel", start, end, TimeUnit.MILLISECONDS);
         metrics.addCounter("mdel", 1);
-        metrics.addMetric("mdel.size", keys.size());
+        metrics.addCounter("r.mdel.size", keys.size());
     }
 
     default void _mdel(K[] keys) {
@@ -263,6 +263,6 @@ public interface CacheClient<K, V> {
         Metrics metrics = MetricsScope.getMetrics();
         metrics.addTime("mdel", start, end, TimeUnit.MILLISECONDS);
         metrics.addCounter("mdel", 1);
-        metrics.addMetric("mdel.size", keys.length);
+        metrics.addCounter("r.mdel.size", keys.length);
     }
 }
