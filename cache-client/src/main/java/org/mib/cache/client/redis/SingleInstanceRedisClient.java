@@ -9,7 +9,7 @@ public class SingleInstanceRedisClient<K, V> extends RedisClient<K, V> {
 
     private final JedisPool pool;
 
-    public SingleInstanceRedisClient(final KeyExtractor<K> keyExtractor, final ValueTranslator<V> valueTranslator,
+    public SingleInstanceRedisClient(final KeyExtractor<K> keyExtractor, final ValueTranslator<K, V> valueTranslator,
                                      final String endpoint) {
         super(keyExtractor, valueTranslator);
         validateStringNotBlank(endpoint, "endpoint");

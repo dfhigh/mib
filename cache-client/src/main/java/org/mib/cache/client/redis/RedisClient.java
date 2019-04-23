@@ -1,6 +1,8 @@
 package org.mib.cache.client.redis;
 
+import com.google.common.collect.Lists;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
 import org.mib.cache.client.CacheClient;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
@@ -8,8 +10,8 @@ import redis.clients.jedis.Pipeline;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
+import static org.mib.common.validator.Validator.validateIntPositive;
 import static org.mib.common.validator.Validator.validateObjectNotNull;
 
 @Slf4j
@@ -18,9 +20,9 @@ public abstract class RedisClient<K, V> implements CacheClient<K, V> {
     private static final String OK = "OK";
 
     private final KeyExtractor<K> keyExtractor;
-    private final ValueTranslator<V> valueTranslator;
+    private final ValueTranslator<K, V> valueTranslator;
 
-    protected RedisClient(final KeyExtractor<K> keyExtractor, final ValueTranslator<V> valueTranslator) {
+    protected RedisClient(final KeyExtractor<K> keyExtractor, final ValueTranslator<K, V> valueTranslator) {
         validateObjectNotNull(keyExtractor, "key extractor");
         validateObjectNotNull(valueTranslator, "value translator");
         this.keyExtractor = keyExtractor;
@@ -28,11 +30,19 @@ public abstract class RedisClient<K, V> implements CacheClient<K, V> {
     }
 
     protected JedisPool fromEndpoint(String endpoint) {
+        return fromEndpoint(endpoint, GenericObjectPoolConfig.DEFAULT_MAX_TOTAL);
+    }
+
+    protected JedisPool fromEndpoint(String endpoint, int maxConn) {
+        validateIntPositive(maxConn, "max connection");
         String[] fields = endpoint.split(":");
         if (fields.length != 2) throw new IllegalArgumentException("invalid endpoint " + endpoint);
         String host = fields[0];
         int port = Integer.parseInt(fields[1]);
-        return new JedisPool(host, port);
+        GenericObjectPoolConfig config = new GenericObjectPoolConfig();
+        config.setMaxTotal(maxConn);
+        config.setMaxIdle(maxConn);
+        return new JedisPool(config, host, port);
     }
 
     protected abstract Jedis getJedis(String key, boolean isWrite);
@@ -144,7 +154,7 @@ public abstract class RedisClient<K, V> implements CacheClient<K, V> {
         try (Jedis jedis = getJedis(cacheKey, false)) {
             String cacheValue = jedis.get(cacheKey);
             log.debug("retrieved {} for key {}", cacheValue, cacheKey);
-            return cacheValue == null ? null : valueTranslator.translateBack(cacheValue);
+            return cacheValue == null ? null : valueTranslator.translateBack(key, cacheValue);
         }
     }
 
@@ -155,9 +165,11 @@ public abstract class RedisClient<K, V> implements CacheClient<K, V> {
         try (Jedis jedis = getJedis(cacheKeys[0], false)) {
             List<String> cacheValues = jedis.mget(cacheKeys);
             log.debug("retrieved values {} for keys {}", cacheValues, cacheKeys);
-            return cacheValues.stream().map(
-                    cv -> cv == null ? null : valueTranslator.translateBack(cv)
-            ).collect(Collectors.toList());
+            List<V> values = Lists.newArrayListWithCapacity(keys.size());
+            for (int i = 0; i < keys.size(); i++) {
+                values.add(cacheValues.get(i) == null ? null : valueTranslator.translateBack(keys.get(i), cacheValues.get(i)));
+            }
+            return values;
         }
     }
 
@@ -169,9 +181,11 @@ public abstract class RedisClient<K, V> implements CacheClient<K, V> {
         try (Jedis jedis = getJedis(cacheKeys[0], false)) {
             List<String> cacheValues = jedis.mget(cacheKeys);
             log.debug("retrieved values {} for keys {}", cacheValues, cacheKeys);
-            return (V[]) cacheValues.stream().map(
-                    cv -> cv == null ? null : valueTranslator.translateBack(cv)
-            ).toArray();
+            V[] values = (V[]) new Object[keys.length];
+            for (int i = 0; i < keys.length; i++) {
+                values[i] = cacheValues.get(i) == null ? null : valueTranslator.translateBack(keys[i], cacheValues.get(i));
+            }
+            return values;
         }
     }
 

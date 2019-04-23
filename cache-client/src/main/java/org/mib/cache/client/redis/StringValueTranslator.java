@@ -1,8 +1,8 @@
 package org.mib.cache.client.redis;
 
-public class StringValueTranslator implements ValueTranslator<String> {
+public class StringValueTranslator<K> implements ValueTranslator<K, String> {
 
-    private static volatile ValueTranslator<String> instance = null;
+    private static volatile ValueTranslator instance = null;
 
     private StringValueTranslator() {}
 
@@ -12,11 +12,11 @@ public class StringValueTranslator implements ValueTranslator<String> {
     }
 
     @Override
-    public String translateBack(String str) {
+    public String translateBack(K key, String str) {
         return str;
     }
 
-    public static ValueTranslator<String> getInstance() {
+    public static ValueTranslator getInstance() {
         if (instance == null) {
             synchronized (StringValueTranslator.class) {
                 if (instance == null) {

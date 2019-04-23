@@ -17,7 +17,7 @@ public class MasterSlaveRedisClient<K, V> extends RedisClient<K, V> {
     private final List<JedisPool> slavePools;
 
     public MasterSlaveRedisClient(final String masterEndpoint, final Set<String> slaveEndpoints,
-                                  final KeyExtractor<K> keyExtractor, final ValueTranslator<V> valueTranslator) {
+                                  final KeyExtractor<K> keyExtractor, final ValueTranslator<K, V> valueTranslator) {
         super(keyExtractor, valueTranslator);
         validateStringNotBlank(masterEndpoint, "master endpoint");
         validateCollectionNotEmptyContainsNoNull(slaveEndpoints, "slave endpoints");
