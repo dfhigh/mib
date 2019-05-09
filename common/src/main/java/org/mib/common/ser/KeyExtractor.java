@@ -1,4 +1,4 @@
-package org.mib.cache.client.redis;
+package org.mib.common.ser;
 
 @FunctionalInterface
 public interface KeyExtractor<K> {

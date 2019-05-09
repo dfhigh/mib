@@ -4,6 +4,8 @@ import com.google.common.collect.Lists;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
 import org.mib.cache.client.CacheClient;
+import org.mib.common.ser.KeyExtractor;
+import org.mib.common.ser.ValueTranslator;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.Pipeline;

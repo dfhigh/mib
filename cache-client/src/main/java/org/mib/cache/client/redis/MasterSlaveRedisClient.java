@@ -1,5 +1,7 @@
 package org.mib.cache.client.redis;
 
+import org.mib.common.ser.KeyExtractor;
+import org.mib.common.ser.ValueTranslator;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 
