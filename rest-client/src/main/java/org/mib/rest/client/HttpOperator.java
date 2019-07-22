@@ -959,7 +959,7 @@ public abstract class HttpOperator {
             rb.setConfig(rc);
         }
         contextInjection(rb);
-        return executeHttpWithRetry(rb.build()).getEntity();
+        return executeHttp(rb.build()).getEntity();
     }
 
     private HttpEntity executeHttpForEntity(String method, String url, Collection<NameValuePair> parameters, Collection<NameValuePair> headers, Collection<NameValuePair> formKeyValues, int timeoutMillis) throws Exception {
@@ -972,7 +972,7 @@ public abstract class HttpOperator {
             rb.setConfig(rc);
         }
         contextInjection(rb);
-        return executeHttpWithRetry(rb.build()).getEntity();
+        return executeHttp(rb.build()).getEntity();
     }
 
     private HttpEntity executeHttpForEntity(String method, String url, Collection<NameValuePair> parameters, Collection<NameValuePair> headers, InputStream is, String key, int timeoutMillis) throws Exception {
@@ -992,7 +992,7 @@ public abstract class HttpOperator {
             rb.setConfig(rc);
         }
         contextInjection(rb);
-        return executeHttpWithRetry(rb.build()).getEntity();
+        return executeHttp(rb.build()).getEntity();
     }
 
     protected void contextInjection(RequestBuilder requestBuilder) {
@@ -1009,7 +1009,7 @@ public abstract class HttpOperator {
         }
     }
 
-    public HttpResponse executeHttpWithRetry(HttpUriRequest request) throws Exception {
+    public HttpResponse executeHttp(HttpUriRequest request) throws Exception {
         return executeHttpWithRetry(request, 1);
     }
 
@@ -1019,7 +1019,7 @@ public abstract class HttpOperator {
         Exception e = null;
         HttpResponse response = null;
         try {
-            response = executeHttp(request);
+            response = executeHttpInternally(request);
         } catch (Exception e1) {
             log.error("failed to execute request {} in attempt {}", request, attempts, e1);
             e = e1;
@@ -1033,6 +1033,6 @@ public abstract class HttpOperator {
         return intercept(request, response);
     }
 
-    protected abstract HttpResponse executeHttp(HttpUriRequest request) throws Exception;
+    protected abstract HttpResponse executeHttpInternally(HttpUriRequest request) throws Exception;
 
 }

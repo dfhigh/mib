@@ -174,7 +174,7 @@ public class HttpExecution {
     public HttpResponse execute(HttpOperator http) throws Exception {
         validateObjectNotNull(http, "http operator");
         http.contextInjection(rb);
-        return http.executeHttpWithRetry(rb.build());
+        return http.executeHttp(rb.build());
     }
 
     public HttpResponse execute() throws Exception {

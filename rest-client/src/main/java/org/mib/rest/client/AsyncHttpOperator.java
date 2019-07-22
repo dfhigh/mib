@@ -172,7 +172,7 @@ public class AsyncHttpOperator extends HttpOperator {
     }
 
     @Override
-    protected HttpResponse executeHttp(HttpUriRequest request) throws Exception {
+    protected HttpResponse executeHttpInternally(HttpUriRequest request) throws Exception {
         log.debug("executing {}...", request);
         HttpResponse response = http.execute(request, SYNC_CB).get();
         log.debug("executed {} with response {}", request, response);
