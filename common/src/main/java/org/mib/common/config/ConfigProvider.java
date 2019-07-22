@@ -20,6 +20,7 @@ public class ConfigProvider {
     static {
         try {
             String externalConfig = System.getProperty("config.location");
+            boolean shouldLoad = true;
             InputStream is;
             if (StringUtils.isNotBlank(externalConfig)) {
                 log.info("loading config from external config file {}...", externalConfig);
@@ -27,9 +28,14 @@ public class ConfigProvider {
             } else {
                 log.info("loading config from classpath config file application.properties...");
                 is = ConfigProvider.class.getResourceAsStream("/application.properties");
+                shouldLoad = is != null;
             }
-            CONFIGS.load(is);
-            log.info("loaded config as {}", CONFIGS);
+            if (shouldLoad) {
+                CONFIGS.load(is);
+                log.info("loaded config as {}", CONFIGS);
+            } else {
+                log.warn("nothing loaded for config");
+            }
         } catch (IOException e) {
             log.error("failed to load config", e);
             throw new IllegalStateException("unable to load config");
