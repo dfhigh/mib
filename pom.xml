@@ -7,7 +7,7 @@
     <groupId>org.mib</groupId>
     <artifactId>mib</artifactId>
     <packaging>pom</packaging>
-    <version>1.2.1-SNAPSHOT</version>
+    <version>1.3.0-SNAPSHOT</version>
     <modules>
         <module>common</module>
         <module>rest-interface</module>
@@ -21,11 +21,14 @@
     <name>mib</name>
 
     <properties>
-        <guava.version>27.0-jre</guava.version>
-        <slf4j.version>1.7.25</slf4j.version>
-        <lombok.version>1.16.20</lombok.version>
-        <jackson.version>2.9.8</jackson.version>
-        <lang3.version>3.7</lang3.version>
+        <java.version>1.8</java.version>
+        <guava.version>28.0-jre</guava.version>
+        <slf4j.version>1.7.26</slf4j.version>
+        <lombok.version>1.18.8</lombok.version>
+        <jackson.version>2.10.0.pr1</jackson.version>
+        <lang3.version>3.9</lang3.version>
+        <hc.version>4.5.9</hc.version>
+        <hccore.version>4.4.11</hccore.version>
     </properties>
 
     <build>
@@ -34,14 +37,14 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <configuration>
-                    <source>1.8</source>
-                    <target>1.8</target>
+                    <source>${java.version}</source>
+                    <target>${java.version}</target>
                 </configuration>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-enforcer-plugin</artifactId>
-                <version>1.4.1</version>
+                <version>3.0.0-M2</version>
                 <executions>
                     <execution>
                         <id>enforce</id>
