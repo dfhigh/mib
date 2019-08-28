@@ -5,7 +5,7 @@ import lombok.Getter;
 
 public enum Operator {
 
-    LT("<"), LTE("<="), EQ("="), GTE(">="), GT(">"), NE("<>");
+    LT("<"), LTE("<="), EQ("="), GTE(">="), GT(">"), NE("<>"), LIKE("like");
 
     private @Getter @JsonValue String expr;
 
@@ -31,6 +31,9 @@ public enum Operator {
             case "<>":
             case "!=":
                 return NE;
+            case "like":
+            case "LIKE":
+                return LIKE;
             default:
                 throw new IllegalArgumentException("unknown operator " + expr);
         }

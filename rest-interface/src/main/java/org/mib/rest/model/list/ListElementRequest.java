@@ -28,9 +28,14 @@ public class ListElementRequest {
 
     public ListElementRequest escaped() {
         if (filters != null) {
-            filters.stream().filter(filter -> filter.getValue() instanceof String).forEach(
-                    filter -> filter.setValue(QueryEscaper.sqlEscape((String) filter.getValue()))
-            );
+            filters.stream().filter(filter -> filter.getValue() instanceof String).forEach(filter -> {
+                String escapedValue = QueryEscaper.sqlEscape((String) filter.getValue());
+                if (filter.getOperator() == Operator.LIKE) {
+                    filter.setValue("%" + escapedValue + "%");
+                } else {
+                    filter.setValue(escapedValue);
+                }
+            });
         }
         if (ins != null) {
             for (Map.Entry<String, Set<?>> entry : ins.entrySet()) {

@@ -69,4 +69,14 @@ public class Filter {
         validateStringNotBlank(field, "field name");
         return new Filter(field, Operator.GTE, value, jsonKey);
     }
+
+    public static Filter like(final String field, final String value) {
+        return like(field, value, null);
+    }
+
+    public static Filter like(final String field, final String value, final String jsonKey) {
+        validateStringNotBlank(field, "field name");
+        validateStringNotBlank(value, "field search value");
+        return new Filter(field, Operator.LIKE, value, jsonKey);
+    }
 }
