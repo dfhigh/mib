@@ -14,7 +14,8 @@ import java.util.regex.Pattern;
 @Slf4j
 public class ConfigProvider {
 
-    private static final Pattern WITH_ENV_VALUE = Pattern.compile("\\$\\{(\\w+)(:.*)?}");
+    private static final String REGEX = "\\$\\{(.*?)}";
+    private static final Pattern PATTERN = Pattern.compile(REGEX);
 
     private static final Properties CONFIGS = new Properties();
     static {
@@ -48,17 +49,22 @@ public class ConfigProvider {
 
     public static String getValueWithEnv(String expression) {
         if (expression == null) return null;
-        Matcher matcher = WITH_ENV_VALUE.matcher(expression);
-        if (matcher.find()) {
-            String env = matcher.group(1), defaultValueWithColon = matcher.group(2);
-            String envValue = System.getenv(env);
-            if (defaultValueWithColon != null) {
-                String defaultValue = defaultValueWithColon.substring(1);
-                return Optional.ofNullable(envValue).orElse(defaultValue);
+        String[] fields = expression.split(REGEX);
+        Matcher matcher = PATTERN.matcher(expression);
+        int i = 0;
+        StringBuilder sb = new StringBuilder();
+        while (matcher.find()) {
+            if (i < fields.length) sb.append(fields[i++]);
+            String exp = matcher.group(1);
+            int index = exp.indexOf(':');
+            if (index > 0) {
+                String env = exp.substring(0, index), defaultValue = exp.substring(index+1);
+                sb.append(Optional.ofNullable(System.getenv(env)).orElse(defaultValue));
+            } else {
+                sb.append(System.getenv(exp));
             }
-            return envValue;
         }
-        return expression;
+        return sb.length() == 0 ? expression : sb.toString();
     }
 
     public static String get(String key, String defaultValue) {
