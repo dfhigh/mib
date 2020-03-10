@@ -64,6 +64,7 @@ public class ConfigProvider {
                 sb.append(System.getenv(exp));
             }
         }
+        if (i < fields.length) sb.append(fields[i]);
         return sb.length() == 0 ? expression : sb.toString();
     }
 

@@ -18,5 +18,6 @@ public class ConfigProviderTest {
         assertEquals("value", ConfigProvider.get("env1"));
         assertEquals("value:haha", ConfigProvider.get("env2"));
         assertEquals("jdbc:mysql://localhost:3306/db", ConfigProvider.get("jdbc"));
+        assertEquals("value3{}", ConfigProvider.get("exp"));
     }
 }
